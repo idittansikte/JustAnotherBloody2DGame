@@ -69,14 +69,16 @@ void Game::HandleEvents()
 void Game::Update()
 {
   // Lets move this to the current state
-  m_vStates.back()->Update(this);
+  for ( auto it : m_vStates )
+    it->Update(this);
 }
 
 void Game::Draw()
 {
   mRenderer->beginScene();
   // Lets move this to the current state
-  m_vStates.back()->Draw(this, mRenderer);
+  for ( auto it : m_vStates )
+  it->Draw(this, mRenderer);
   
   mRenderer->endScene();
 }

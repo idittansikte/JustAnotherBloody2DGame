@@ -42,13 +42,26 @@ void PlayState::HandleEvents(Game* game)
           case SDLK_SPACE:
             game->PushState(PauseState::Instance());
             break;
+          case SDLK_UP:
+            
+            break;
+          case SDLK_DOWN:
+            
+            break;
+          case SDLK_LEFT:
+            
+            break;
+          case SDLK_RIGHT:
+            
+            break;
+          
         }
     }
   }
 }
 void PlayState::Update(Game* game)
 {
-  ;
+  m_Level->Update();
 }
 
 void PlayState::Draw(Game* game, Renderer* renderer)

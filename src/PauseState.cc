@@ -51,6 +51,6 @@ void PauseState::Update(Game* game)
 
 void PauseState::Draw(Game* game, Renderer* renderer)
 {
-  //Sprite::Draw(game->getScreen(), pauseSprite, 0, 0);
+  renderer->drawTexture(Rect(0,0,SCREEN_WIDTH, SCREEN_HEIGHT), Renderer::BACKGROUND_PAUSEMENU, false);
   //SDL_Flip(game->getScreen());
 }

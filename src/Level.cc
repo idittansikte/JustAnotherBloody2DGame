@@ -8,8 +8,19 @@ Level::~Level()
 
 void Level::Init()
 {
-  m_vGameObjects.push_back(new Player(Rect(0,0,100,100), Renderer::PLAYER));
-  m_vGameObjects.push_back(new Player(Rect(100,200,100,100), Renderer::PLAYER));
+  pushGameObject(0,0,100,100, Renderer::PLAYER);
+  pushGameObject(100,200,100,100, Renderer::PLAYER);
+}
+
+void pushGameObject(int x, int y, int w, int h, Renderer::ObjectType type)
+{
+  if (type == PLAYER){
+    m_vGameObjects.push_back(new Player(Rect(x,y,w,h), Renderer::type, m_iUniqueCounter++);
+  }
+  else if ( type == GRASS_PLATFORM_TOPLEFT || type == GRASS_PLATFORM_TOPRIGHT || type == GRASS_PLATFORM_BOTTOMRIGHT
+           || type == GRASS_PLATFORM_BOTTOMLEFT ){
+    m_vGameObjects.push_back(new Platform(Rect(x,y,w,h), Renderer::type, m_iUniqueCounter++);
+  }
 }
 
 void Level::LoadLevel()

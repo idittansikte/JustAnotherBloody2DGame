@@ -8,19 +8,19 @@ int main(int argc, char* argv[])
 {
   Game game;
   
-  GameInst::Instance()->Init();
+  game.Init();
   
-  GameInst::Instance()->ChangeState(MenuState::Instance());
+  game.ChangeState(MenuState::Instance());
   
   while(game.Running())
   {
-    GameInst::Instance()->HandleEvents();
-    GameInst::Instance()->Update();
-    GameInst::Instance()->Draw();
+    game.HandleEvents();
+    game.Update();
+    game.Draw();
   }
 
   // cleanup game
-  GameInst::Instance()->Clean();
+  game.Clean();
   
   return 0;
 }

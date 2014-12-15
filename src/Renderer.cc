@@ -91,6 +91,13 @@ void Renderer::InitTextures()
 {
 	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( PLAYER, loadTexture(PLAYER_FILEPATH) ) );
 	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( MENU_BACKGROUND, loadTexture(MENU_BACKGROUND_FILEPATH) ) );
+	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( GRASS_PLATFORM_TOPLEFT, loadTexture(GRASS_PLATFORM_TOPLEFT_FILEPATH) ) );
+	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( GRASS_PLATFORM_TOPRIGHT, loadTexture(GRASS_PLATFORM_TOPRIGHT_FILEPATH) ) );
+	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( GRASS_PLATFORM_BOTTOMRIGHT, loadTexture(GRASS_PLATFORM_BOTTOMRIGHT_FILEPATH) ) );
+	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( GRASS_PLATFORM_BOTTOMLEFT, loadTexture(GRASS_PLATFORM_BOTTOMLEFT_FILEPATH) ) );
+	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( ENEMY_GREEN, loadTexture(ENEMY_GREEN_FILEPATH) ) );
+	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( BACKGROUND_BLUESKY, loadTexture(BACKGROUND_BLUESKY_FILEPATH) ) );
+	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( BACKGROUND_PAUSEMENU, loadTexture(BACKGROUND_PAUSEMENU_FILEPATH) ) );
 }
 
 void Renderer::beginScene()
@@ -178,7 +185,7 @@ SDL_Texture* Renderer::loadTexture(string text, unsigned int color1, unsigned in
 }
 
 
-void Renderer::updateCamera(Rect screenCenter, int LEVEL_WIDTH, int LEVEL_HEIGHT)
+void Renderer::updateCamera(Rect screenCenter, int levelWidth, int levelHeight)
 {
 	//Center the camera over the player
 	camera.x = ( screenCenter.x + screenCenter.w / 2 ) - SCREEN_WIDTH / 2;
@@ -189,10 +196,10 @@ void Renderer::updateCamera(Rect screenCenter, int LEVEL_WIDTH, int LEVEL_HEIGHT
 		camera.x = 0;
 	if( camera.y < 0 )
 		camera.y = 0;
-	if( camera.x > LEVEL_WIDTH - camera.w )
-		camera.x = LEVEL_WIDTH - camera.w;
-	if( camera.y > LEVEL_HEIGHT - camera.h )
-		camera.y = LEVEL_HEIGHT - camera.h;
+	if( camera.x > levelWidth - camera.w )
+		camera.x = levelWidth - camera.w;
+	if( camera.y > levelHeight - camera.h )
+		camera.y = levelHeight - camera.h;
 		
 }
 

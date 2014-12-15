@@ -9,8 +9,8 @@ class GameState;
 class Game
 {
   public:
-    //Game();
-    ~Game();
+    Game();
+    ~Game(){};
     
     void Init();
     
@@ -31,8 +31,7 @@ class Game
     
   private:
     
-    Game() {}
-    friend class Singleton<Game>
+    
     
     std::vector<GameState*> m_vStates;
     
@@ -41,7 +40,5 @@ class Game
     
     Renderer* mRenderer;
 };
-
-typedef Singleton<Game> GameInst;
 
 #endif
