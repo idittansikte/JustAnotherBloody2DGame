@@ -1,5 +1,7 @@
 #include "Level.h"
 #include "Player.h"
+#include "Platform.h"
+#include "Constants.h"
 
 Level::Level()
 {}
@@ -8,24 +10,25 @@ Level::~Level()
 
 void Level::Init()
 {
-  pushGameObject(0,0,100,100, Renderer::PLAYER);
-  pushGameObject(100,200,100,100, Renderer::PLAYER);
+  addGameObject(0,0,100,100, GameObject::PLAYER, PLAYER_FILEPATH);
+  addGameObject(100,200,100,100, GameObject::PLAYER, PLAYER_FILEPATH);
 }
 
-void pushGameObject(int x, int y, int w, int h, Renderer::ObjectType type)
+void Level::addGameObject(int x, int y, int w, int h, GameObject::ObjectType OType, std::string texturePath)
 {
-  if (type == PLAYER){
-    m_vGameObjects.push_back(new Player(Rect(x,y,w,h), Renderer::type, m_iUniqueCounter++);
+  if (OType == GameObject::PLAYER){
+    m_vMovingGameObjects.push_back(new Player(Rect(x,y,w,h), OType, texturePath, m_iUniqueCounter++));
   }
-  else if ( type == GRASS_PLATFORM_TOPLEFT || type == GRASS_PLATFORM_TOPRIGHT || type == GRASS_PLATFORM_BOTTOMRIGHT
-           || type == GRASS_PLATFORM_BOTTOMLEFT ){
-    m_vGameObjects.push_back(new Platform(Rect(x,y,w,h), Renderer::type, m_iUniqueCounter++);
+  else if ( OType == GameObject::PLATFORM ){
+    m_vStaticGameObjects.push_back(new Platform(Rect(x,y,w,h), OType, texturePath, m_iUniqueCounter++));
   }
 }
 
 void Level::LoadLevel()
 {
   
+  m_StaticColliesGrid.init(200, 2000, 2000);
+  m_MovingColliesGrid.init(200, 2000, 2000);
 }
 
 void Level::SaveLevel()
@@ -35,13 +38,21 @@ void Level::SaveLevel()
 
 void Level::Update()
 {
-  
+  for (auto it : m_vMovingGameObjects)
+    {
+      it->Update();
+    }
 }
 
 void Level::Draw(Renderer* renderer)
 {
   
-    for (auto it : m_vGameObjects)
+    for (auto it : m_vMovingGameObjects)
+    {
+      it->Draw(renderer);
+    }
+    
+    for (auto it : m_vStaticGameObjects)
     {
       it->Draw(renderer);
     }

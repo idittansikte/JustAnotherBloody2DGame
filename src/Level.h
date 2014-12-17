@@ -2,6 +2,8 @@
 
 #include "GameObject.h"
 #include "Renderer.h"
+#include "Player.h"
+#include "Collision.h"
 #include <vector>
 #include <map>
 #include <string>
@@ -17,7 +19,7 @@ class Level
   void LoadLevel();
   void SaveLevel();
   
-  void pushGameObject(int x, int y, int w, int h, Renderer::ObjectType type)
+  void addGameObject(int x, int y, int w, int h, GameObject::ObjectType OType, std::string texturePath);
   
   void Update();
   
@@ -26,8 +28,13 @@ class Level
   void Clean();
   
   private:
+    int m_iWorldWidth;
+    int m_iWorldHeight; 
     std::vector<GameObject*> m_vMovingGameObjects;
     std::vector<GameObject*> m_vStaticGameObjects;
+    Collision m_StaticColliesGrid;
+    Collision m_MovingColliesGrid;
+    Player* m_Player;
     int m_iUniqueCounter{};
     
 };

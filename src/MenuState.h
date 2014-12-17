@@ -6,6 +6,7 @@
 #include "Renderer.h"
 #include "GameState.h"
 #include "Game.h"
+#include "Input.h"
 
 class MenuState : public GameState
 {

@@ -21,6 +21,11 @@ void Renderer::Clean()
 	TTF_CloseFont(mFont);
     mWindow = NULL;
     mRenderer = NULL;
+	for (std::map<std::string, SDL_Texture*>::iterator it=m_mObjectTextures.begin(); it!=m_mObjectTextures.end(); ++it)
+	{
+		SDL_DestroyTexture(it->second);
+		it->second = nullptr;
+	}
 	TTF_Quit();
     SDL_Quit();
 }
@@ -87,17 +92,21 @@ bool Renderer::Init()
     
 }
 
-void Renderer::InitTextures()
+SDL_Texture* Renderer::getTexture(std::string texturePath)
 {
-	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( PLAYER, loadTexture(PLAYER_FILEPATH) ) );
-	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( MENU_BACKGROUND, loadTexture(MENU_BACKGROUND_FILEPATH) ) );
-	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( GRASS_PLATFORM_TOPLEFT, loadTexture(GRASS_PLATFORM_TOPLEFT_FILEPATH) ) );
-	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( GRASS_PLATFORM_TOPRIGHT, loadTexture(GRASS_PLATFORM_TOPRIGHT_FILEPATH) ) );
-	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( GRASS_PLATFORM_BOTTOMRIGHT, loadTexture(GRASS_PLATFORM_BOTTOMRIGHT_FILEPATH) ) );
-	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( GRASS_PLATFORM_BOTTOMLEFT, loadTexture(GRASS_PLATFORM_BOTTOMLEFT_FILEPATH) ) );
-	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( ENEMY_GREEN, loadTexture(ENEMY_GREEN_FILEPATH) ) );
-	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( BACKGROUND_BLUESKY, loadTexture(BACKGROUND_BLUESKY_FILEPATH) ) );
-	m_mObjectTextures.insert( std::pair<ObjectType, SDL_Texture*>( BACKGROUND_PAUSEMENU, loadTexture(BACKGROUND_PAUSEMENU_FILEPATH) ) );
+	map<std::string, SDL_Texture*>::iterator it;
+	it = m_mObjectTextures.find(texturePath);
+	
+	if(it != m_mObjectTextures.end())
+	{
+		return it->second;
+	}
+	else
+	{
+		m_mObjectTextures.insert(make_pair(texturePath, loadTexture(texturePath)));
+		cout << "Added " << texturePath << " to m_mObjectTextures\n";
+		return m_mObjectTextures.find(texturePath)->second;
+	}
 }
 
 void Renderer::beginScene()
@@ -112,8 +121,9 @@ void Renderer::endScene()
 	SDL_Delay(1000/60);
 }
 
-void Renderer::drawTexture(Rect rect, ObjectType oType, bool onMap ,Rect clip, bool flip)
+void Renderer::drawTexture(Rect rect, std::string texturePath, bool onMap ,Rect clip, bool flip)
 {
+	
   SDL_Rect offset;
   SDL_Rect Clip;
   SDL_RendererFlip SDLflip;
@@ -130,10 +140,11 @@ void Renderer::drawTexture(Rect rect, ObjectType oType, bool onMap ,Rect clip, b
   if( clip.w != 0 && clip.w != 0 )
   {
     Clip = {clip.x, clip.y, clip.w, clip.h};
-	SDL_RenderCopyEx( mRenderer, m_mObjectTextures.find(oType)->second, &Clip, &offset, 0, NULL, SDLflip );
+	SDL_RenderCopyEx( mRenderer, getTexture(texturePath), &Clip, &offset, 0, NULL, SDLflip );
   }
-  else
-    SDL_RenderCopyEx( mRenderer, m_mObjectTextures.find(oType)->second, NULL, &offset, 0, NULL, SDLflip );
+  else{
+    SDL_RenderCopyEx( mRenderer, getTexture(texturePath), NULL, &offset, 0, NULL, SDLflip );
+  }
 }
 
 
@@ -156,7 +167,6 @@ SDL_Texture* Renderer::loadTexture(std::string filename)
         }
         SDL_FreeSurface(tmpSurface);
     }
-
     return newTexture;
 }
 

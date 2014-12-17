@@ -14,8 +14,6 @@
 class Renderer
 {
   public:
-    enum ObjectType {PLAYER, GRASS_PLATFORM_TOPLEFT, GRASS_PLATFORM_TOPRIGHT, GRASS_PLATFORM_BOTTOMRIGHT,
-    GRASS_PLATFORM_BOTTOMLEFT, ENEMY_GREEN, BACKGROUND_BLUESKY, MENU_BACKGROUND, BACKGROUND_PAUSEMENU};
     
     Renderer();
     ~Renderer();
@@ -23,12 +21,12 @@ class Renderer
     void Clean();
     bool Init();
     
-    void InitTextures();
+    SDL_Texture* getTexture(std::string texturePath);
     
     void beginScene();
     void endScene();
     
-    void drawTexture(Rect rect, ObjectType oType, bool onMap = false , Rect clip = Rect(), bool flip = false);
+    void drawTexture(Rect rect, std::string texturePath, bool onMap = false , Rect clip = Rect(), bool flip = false);
     
     SDL_Texture* loadTexture(std::string filename);
     SDL_Texture* loadTexture(std::string text, unsigned int color1, unsigned int color2, unsigned int color3);
@@ -41,7 +39,7 @@ class Renderer
     SDL_Renderer* mRenderer;
     TTF_Font * mFont;
     SDL_Rect camera;
-    std::map<ObjectType, SDL_Texture*> m_mObjectTextures;
+    std::map<std::string, SDL_Texture*> m_mObjectTextures;
   
 };
 

@@ -2,7 +2,9 @@
 #define GAME_H
 
 #include <vector>
+
 #include "Renderer.h"
+#include "Input.h"
 
 class GameState;
 
@@ -30,8 +32,6 @@ class Game
     void Quit() { m_bRunning = false; }
     
   private:
-    
-    
     
     std::vector<GameState*> m_vStates;
     

@@ -1,6 +1,9 @@
 #include "MenuState.h"
 #include "PlayState.h"
 
+#include "Constants.h"
+#include "InputDefinition.h"
+
 MenuState MenuState::m_MenuState;
 
 void MenuState::Init()
@@ -25,31 +28,19 @@ void MenuState::Resume()
 
 void MenuState::HandleEvents(Game* game)
 {
-  SDL_Event event;
-  
-  if( SDL_PollEvent(&event) )
-  {
-    switch( event.type )
-    {
-      case SDL_QUIT:
-        game->Quit();
-        break;
+  if( Input::getInstance()->get_quit() )
+      game->Quit();
       
-      case SDL_KEYDOWN:
-        switch (event.key.keysym.sym){
-          case SDLK_SPACE:
-            game->ChangeState(PlayState::Instance());
-            break;
-        }
-    }
-  }
+  if(Input::getInstance()->is_key_pressed(KEY_SPACE))
+      game->ChangeState(PlayState::Instance());
+      
 }
 void MenuState::Update(Game* game)
 {
-  ;
+;
 }
 
 void MenuState::Draw(Game* game, Renderer* renderer)
 {
-  renderer->drawTexture( Rect(0,0,SCREEN_WIDTH, SCREEN_HEIGHT), Renderer::MENU_BACKGROUND, false);
+  renderer->drawTexture( Rect(0,0,SCREEN_WIDTH, SCREEN_HEIGHT), MENU_BACKGROUND_FILEPATH, false);
 }

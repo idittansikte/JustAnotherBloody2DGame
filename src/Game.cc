@@ -14,7 +14,6 @@ void Game::Init()
   m_bRunning = true;
   mRenderer = new Renderer();
   mRenderer->Init();
-  mRenderer->InitTextures();
 }
 
 void Game::ChangeState(GameState* state)
@@ -68,6 +67,7 @@ void Game::HandleEvents()
 
 void Game::Update()
 {
+  Input::getInstance()->update();
   // Lets move this to the current state
   for ( auto it : m_vStates )
     it->Update(this);
@@ -78,7 +78,7 @@ void Game::Draw()
   mRenderer->beginScene();
   // Lets move this to the current state
   for ( auto it : m_vStates )
-  it->Draw(this, mRenderer);
+    it->Draw(this, mRenderer);
   
   mRenderer->endScene();
 }

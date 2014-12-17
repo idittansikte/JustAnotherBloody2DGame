@@ -1,17 +1,19 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
+#include <string>
+
 #include "Renderer.h"
-#include "GameObject.h"
+#include "MovingGameObject.h"
 #include "Rect.h"
 #include "Constants.h"
 
-class Player : public GameObject
+class Player : public MovingGameObject
 {
   public:
     
-  Player( Rect r, Renderer::ObjectType type )
-    : GameObject(r, type)
+  Player( Rect r, GameObject::ObjectType otype, std::string texturePath, int uniqueID )
+    : MovingGameObject(r, otype, texturePath, uniqueID)
   {}
   
   void Init();

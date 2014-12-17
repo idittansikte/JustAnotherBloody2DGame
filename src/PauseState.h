@@ -5,6 +5,7 @@
 
 #include "GameState.h"
 #include "Renderer.h"
+#include "Input.h"
 
 class PauseState : public GameState
 {

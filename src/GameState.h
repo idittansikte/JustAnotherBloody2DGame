@@ -3,6 +3,7 @@
 
 #include "Game.h"
 #include "Renderer.h"
+#include "Input.h"
 
 class GameState
 {

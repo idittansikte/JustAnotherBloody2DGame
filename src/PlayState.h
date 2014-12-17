@@ -4,6 +4,7 @@
 #include "GameState.h"
 #include "Renderer.h"
 #include "Level.h"
+#include "Input.h"
 
 class PlayState : public GameState
 {
@@ -25,11 +26,13 @@ class PlayState : public GameState
     }
   protected:
     
-    PlayState() {}
+    PlayState();
     
   private:
     static PlayState m_PlayState;
     Level* m_Level;
+    
+    bool m_is_paused;
 };
 
 #endif

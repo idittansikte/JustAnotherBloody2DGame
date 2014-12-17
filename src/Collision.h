@@ -1,24 +1,39 @@
 #ifndef COLLISION_H
 #define COLLISION_H
 
+#include "GameObject.h"
 #include <map>
 #include <string>
+#include <utility>
+#include <vector>
+
+using namespace std;
 
 class Collision
 {
 public:
-  Collision(){}
+  Collision();
   ~Collision(){}
   
+  void init(int collisionGridSize, int ww, int wh);
   
-  void pushPair(GameObject* objA, GameObject* objB);
-  bool checked(std::string hash);
-  void testCollison(GameObject* objA, GameObject* objB);
+  void update(vector<GameObject*> ObjectList);
+  
+  vector<pair<GameObject*, GameObject*>> findColliedPairs();
+  
+  bool aabbIntersection(GameObject* objA, GameObject* objB);
   
   
 private:
-  map<std::string> m_mChecked;
-  vector<std::pair> ColliedPairs;
-  const int m_CollisionGridSize{50};
-}
+  int m_CollisionGridSize{};
+  int WORLD_WIDTH;
+  int WORLD_HEIGHT;
+  
+  int allocatedCells{0};
+  
+  map<std::string, bool> m_mChecked;
+  
+  vector<vector<vector<GameObject*>>> grid;
+  
+};
 #endif

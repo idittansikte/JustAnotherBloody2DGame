@@ -1,7 +1,14 @@
 #include "PlayState.h"
 #include "PauseState.h"
 
+#include "InputDefinition.h"
+
+
 PlayState PlayState::m_PlayState;
+
+PlayState::PlayState():
+  m_is_paused(false)
+{ }
 
 void PlayState::Init()
 {
@@ -18,50 +25,28 @@ void PlayState::Clean()
 
 void PlayState::Pause()
 {
+  m_is_paused = true;
   printf("PlayState Paused\n");
 }
 void PlayState::Resume()
 {
+  m_is_paused = false;
   printf("PlayState Resumed\n");
 }
 
 void PlayState::HandleEvents(Game* game)
 {
-  SDL_Event event;
-  
-  if( SDL_PollEvent(&event) )
-  {
-    switch( event.type )
-    {
-      case SDL_QUIT:
-        game->Quit();
-        break;
+  if( Input::getInstance()->get_quit() )
+      game->Quit();
       
-       case SDL_KEYDOWN:
-        switch (event.key.keysym.sym){
-          case SDLK_SPACE:
-            game->PushState(PauseState::Instance());
-            break;
-          case SDLK_UP:
-            
-            break;
-          case SDLK_DOWN:
-            
-            break;
-          case SDLK_LEFT:
-            
-            break;
-          case SDLK_RIGHT:
-            
-            break;
-          
-        }
-    }
-  }
+  if(Input::getInstance()->is_key_pressed(KEY_SPACE))
+      game->PushState(PauseState::Instance());
+      
 }
 void PlayState::Update(Game* game)
 {
-  m_Level->Update();
+  if( !m_is_paused )
+    m_Level->Update();
 }
 
 void PlayState::Draw(Game* game, Renderer* renderer)
