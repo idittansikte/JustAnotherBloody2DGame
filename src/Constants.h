@@ -7,6 +7,7 @@ static const int SCREEN_WIDTH = 720;
 static const int SCREEN_HEIGHT = 480;
 
 static const std::string PLAYER_FILEPATH = "../imgs/player.png";
+static const std::string BLOCK_FILEPATH = "../imgs/block.png";
 static const std::string MENU_BACKGROUND_FILEPATH = "../imgs/mainmenu.jpg";
 static const std::string GRASS_PLATFORM_TOPLEFT_FILEPATH = "../imgs/mainmenu.jpg";
 static const std::string GRASS_PLATFORM_TOPRIGHT_FILEPATH = "../imgs/mainmenu.jpg";

@@ -5,6 +5,11 @@ void StaticGameObject::Init()
     
 }
 
+void StaticGameObject::HandleCollision(GameObject* otherObject)
+{
+    
+}
+
 void StaticGameObject::Update()
 {
     

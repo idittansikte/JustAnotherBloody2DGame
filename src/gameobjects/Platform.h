@@ -3,10 +3,10 @@
 
 #include <string>
 
-#include "Renderer.h"
+#include "../Renderer.h"
 #include "StaticGameObject.h"
-#include "Rect.h"
-#include "Constants.h"
+#include "../Rect.h"
+#include "../Constants.h"
 
 class Platform : public StaticGameObject
 {
@@ -18,6 +18,8 @@ class Platform : public StaticGameObject
   
   void Init();
   
+  void HandleCollision(GameObject* otherObject);
+  
   void Update();
   
   void Draw(Renderer* renderer);
@@ -25,6 +27,8 @@ class Platform : public StaticGameObject
   void Clean();
   
   private:
+    
+    int speed{};
 
 };
 

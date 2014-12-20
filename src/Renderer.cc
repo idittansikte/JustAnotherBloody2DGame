@@ -111,12 +111,14 @@ SDL_Texture* Renderer::getTexture(std::string texturePath)
 
 void Renderer::beginScene()
 {
-    SDL_RenderClear(mRenderer);
+	SDL_SetRenderDrawColor(this->mRenderer, 0 ,0 ,0 ,0);
+	
+    SDL_RenderClear(this->mRenderer);
 }
 
 void Renderer::endScene()
 {
-    SDL_RenderPresent(mRenderer);
+    SDL_RenderPresent(this->mRenderer);
     //SDL_Delay(1000/(60+FPScalc.getMilliseconds())); // 60 FPS
 	SDL_Delay(1000/60);
 }

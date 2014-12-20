@@ -1,12 +1,15 @@
 // http://buildnewgames.com/broad-phase-collision-detection/
 
-#include "GameObject.h"
-#include "Renderer.h"
-#include "Player.h"
-#include "Collision.h"
 #include <vector>
 #include <map>
 #include <string>
+
+#include "gameobjects/GameObject.h"
+#include "Renderer.h"
+#include "gameobjects/Player.h"
+#include "Collision.h"
+#include "Constants.h"
+
 
 class Level
 {
@@ -27,13 +30,16 @@ class Level
   
   void Clean();
   
+  Player* getPlayer(){ return m_Player; }
+  
   private:
     int m_iWorldWidth;
     int m_iWorldHeight; 
+    //LevelData m_LevelData;
     std::vector<GameObject*> m_vMovingGameObjects;
     std::vector<GameObject*> m_vStaticGameObjects;
-    Collision m_StaticColliesGrid;
-    Collision m_MovingColliesGrid;
+    Collision* m_StaticColliesGrid;
+    Collision* m_MovingColliesGrid;
     Player* m_Player;
     int m_iUniqueCounter{};
     

@@ -4,15 +4,18 @@
 #include <string>
 
 #include "GameObject.h"
-#include "Rect.h"
-#include "Constants.h"
-#include "Renderer.h"
+#include "../Rect.h"
+#include "../Constants.h"
+#include "../Renderer.h"
 
 class StaticGameObject : public GameObject
 {
   public:
-    
+    StaticGameObject() = delete;
+  
     void Init();
+    
+    void HandleCollision(GameObject* otherObject);
     
     void Update();
     

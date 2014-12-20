@@ -42,6 +42,18 @@ void PlayState::HandleEvents(Game* game)
   if(Input::getInstance()->is_key_pressed(KEY_SPACE))
       game->PushState(PauseState::Instance());
       
+  if(Input::getInstance()->is_key_pressed(KEY_RIGHT))
+      m_Level->getPlayer()->movement_right();
+      
+  if(Input::getInstance()->is_key_pressed(KEY_LEFT))
+      m_Level->getPlayer()->movement_left();
+      
+  if(Input::getInstance()->is_key_pressed(KEY_UP))
+      m_Level->getPlayer()->movement_up();
+      
+  if(Input::getInstance()->is_key_pressed(KEY_DOWN))
+      m_Level->getPlayer()->movement_down();
+      
 }
 void PlayState::Update(Game* game)
 {
