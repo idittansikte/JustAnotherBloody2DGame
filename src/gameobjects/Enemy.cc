@@ -14,9 +14,9 @@ void Enemy::HandleCollision(GameObject* otherObject)
 void Enemy::Update()
 {
   if (getRect().x < SCREEN_WIDTH)
-    add_pos_x(4);
+    apply_velocity_x(4);
   else
-    add_pos_x(-SCREEN_WIDTH);
+    apply_velocity_x(-SCREEN_WIDTH);
 }
 
 void Enemy::Draw(Renderer* renderer)

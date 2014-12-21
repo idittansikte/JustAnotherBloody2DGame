@@ -4,11 +4,13 @@
 #include <vector>
 #include <string>
 
-#include "GameObject.h";
-#include "Player.h;
+#include "gameobjects/GameObject.h"
+#include "gameobjects/Player.h"
 
 struct LevelData
 {
+  LevelData(){}
+  
   vector<GameObject*> vMoving;
   vector<GameObject*> vStatics;
   vector<GameObject*> vBackgrounds;

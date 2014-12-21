@@ -8,6 +8,7 @@
 #include "../Constants.h"
 #include "../Renderer.h"
 
+
 class StaticGameObject : public GameObject
 {
   public:

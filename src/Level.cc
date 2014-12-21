@@ -6,10 +6,14 @@
 #include "Constants.h"
 #include "Point.h"
 
-Level::Level()
+Level::Level():
+  m_iWorldWidth(2000),
+  m_iWorldHeight(2000)
 {
-  m_StaticColliesGrid = new Collision( SCREEN_WIDTH*2, SCREEN_HEIGHT*2 );
-  m_MovingColliesGrid = new Collision( SCREEN_WIDTH*2, SCREEN_HEIGHT*2 );
+  m_LevelData.levelWidth=2000;
+  m_LevelData.levelHeight=2000;
+  m_StaticColliesGrid = new Collision( m_iWorldWidth, m_iWorldHeight );
+  m_MovingColliesGrid = new Collision( m_iWorldWidth, m_iWorldHeight );
 }
 
 Level::~Level()
@@ -18,11 +22,11 @@ Level::~Level()
 void Level::Init()
 {
   
-  addGameObject(0,0,100,100, GameObject::PLAYER, PLAYER_FILEPATH);
-  addGameObject(200,0,100,100, GameObject::PLATFORM, BLOCK_FILEPATH);
+  addGameObject(200,0,100,100, GameObject::PLAYER, PLAYER_FILEPATH);
+  addGameObject(200,400,100,100, GameObject::PLATFORM, BLOCK_FILEPATH);
   
     //Update Only needed once cuz static object wont move...
-  m_StaticColliesGrid->update_grid(m_vStaticGameObjects, Point(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), false );
+  m_StaticColliesGrid->update_grid(m_vStaticGameObjects, m_Player->getCenterPos(), false );
 }
 
 void Level::addGameObject(int x, int y, int w, int h, GameObject::ObjectType OType, std::string texturePath)
@@ -48,22 +52,31 @@ void Level::SaveLevel()
 
 void Level::Update()
 {
+  // Update the grid of moving objects
   m_MovingColliesGrid->update_grid(m_vMovingGameObjects, Point(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), false );
 
+  // Check collision between static and moving objects
   vector<pair<GameObject*, GameObject*>> collies = m_MovingColliesGrid->getColliedPairs(m_StaticColliesGrid);
   
-  if ( collies.empty() )
-    std::cout << "No collies \n";
-  
-    for (auto it : collies)
+  // Handle collied pairs if there where any...
+  if ( !collies.empty() ){
+    for (auto it : collies){
+      it.first->HandleCollision(it.second);
+      it.second->HandleCollision(it.first);
       std::cout << "Collied: " << it.first->getRect().x << " " << it.second->getRect().x << std::endl;
+    }
+  }
+  else{
+    std::cout << "No collies \n";
+  }
     
-    
+  // Update all static objects
   for (auto it : m_vStaticGameObjects)
     {
       it->Update();
     }
   
+  // Update all moving objects
   for (auto it : m_vMovingGameObjects)
     {
       it->Update();
@@ -72,12 +85,17 @@ void Level::Update()
 
 void Level::Draw(Renderer* renderer)
 {
+  //Update camera to the current center of SCREEN before any other draws on map...
+  renderer->updateCamera(m_Player->getRect(), m_iWorldWidth, m_iWorldHeight);
   
+    // Draw all moving objects
     for (auto it : m_vMovingGameObjects)
     {
       it->Draw(renderer);
     }
     
+    
+    // Draw all static objects
     for (auto itt : m_vStaticGameObjects)
     {
       itt->Draw(renderer);

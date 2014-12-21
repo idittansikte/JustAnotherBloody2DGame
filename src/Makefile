@@ -34,7 +34,7 @@ MenuState.o: MenuState.cc MenuState.h GameState.h Rect.h Constants.h
 	# Compiling $<...
 	@ $(CCC) $(FLAGS) -c MenuState.cc $<
       
-Level.o: Level.cc Level.h Rect.h Constants.h
+Level.o: Level.cc Level.h Rect.h Constants.h LevelData.h
 	# Compiling $<...
 	@ $(CCC) $(FLAGS) -c Level.cc $<
 	
@@ -42,7 +42,7 @@ Collision.o: Collision.cc Collision.h Rect.h Constants.h
 	# Compiling $<...
 	@ $(CCC) $(FLAGS) -c Collision.cc $<
 	
-GameObject.o: gameobjects/GameObject.cc gameobjects/GameObject.h Rect.h Constants.h
+GameObject.o: gameobjects/GameObject.cc gameobjects/GameObject.h Rect.h Constants.h LevelData.h
 	# Compiling $<...
 	@ $(CCC) $(FLAGS) -c gameobjects/GameObject.cc $<
 

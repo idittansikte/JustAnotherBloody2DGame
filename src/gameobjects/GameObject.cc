@@ -28,6 +28,15 @@ void GameObject::Clean(){
   
 }
 
+bool GameObject::is_in_screen_range(Point screenCenter){
+      if ( this->getRect().x < screenCenter.x - SCREEN_WIDTH || this->getRect().x > screenCenter.x + SCREEN_WIDTH
+        || this->getRect().y < screenCenter.y - SCREEN_HEIGHT || this->getRect().y < screenCenter.y + SCREEN_HEIGHT ){
+          return false;
+      }
+  return true;
+}
+
+
 void GameObject::setDead(){
   m_dead = true;
 }
