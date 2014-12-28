@@ -46,13 +46,13 @@ void Collision::update_grid( vector<GameObject*> ObjectList, Point center, bool 
       cObjectMaxX = ( cObject->getRect().x + cObject->getRect().w ) / m_CollisionGridSize;
       cObjectMaxY = ( cObject->getRect().y + cObject->getRect().h ) / m_CollisionGridSize;
       // For every grid column object is inside:
-      for ( unsigned int cX{cObjectMinX}; cX <= cObjectMaxX; ++cX )
+      for ( int cX{cObjectMinX}; cX <= cObjectMaxX; ++cX )
 	{
 	  if ( grid[cX].empty() )
 	    grid[cX].resize(gridHeight);
         
 	  // For every grid cell object is inside:
-	  for ( unsigned int cY{cObjectMinY}; cY <= cObjectMaxY; ++cY)
+	  for ( int cY{cObjectMinY}; cY <= cObjectMaxY; ++cY)
 	    {
 	      allocatedCells += 1; // Just a simple counter for testing...
 	      grid[cX][cY].push_back(cObject); //Add Object to grid cell.

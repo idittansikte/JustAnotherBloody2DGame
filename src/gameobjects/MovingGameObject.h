@@ -21,7 +21,7 @@ class MovingGameObject : public GameObject
     bool collidedFromBottom(GameObject* otherObject);
     void HandleCollision(GameObject* otherObject);
     
-    void apply_physics();
+    void apply_gravitaion();
     void turnOn_falling();
     void turnOff_falling();
   
@@ -37,7 +37,7 @@ class MovingGameObject : public GameObject
     
   protected:
     MovingGameObject( Rect r, GameObject::ObjectType otype, std::string texturePath, int uniqueID)
-      : GameObject(r, otype, texturePath, uniqueID), m_max_fallspeed(40)
+      : GameObject(r, otype, texturePath, uniqueID), m_max_fallspeed(10)
     {}
     
     //For collision detection
@@ -45,6 +45,7 @@ class MovingGameObject : public GameObject
     bool contactBottom;
     bool contactLeft;
     bool contactRight;
+    float m_current_fallspeed;
     
   private:
 
@@ -52,8 +53,8 @@ class MovingGameObject : public GameObject
   Point m_velocity;
 
   bool m_falling;
-  const float m_max_fallspeed;
-  float m_current_fallspeed;
+  const float m_max_fallspeed{15};
+  
     
 };
 

@@ -12,9 +12,7 @@ class Player : public MovingGameObject
 {
   public:
     
-  Player( Rect r, GameObject::ObjectType otype, std::string texturePath, int uniqueID )
-    : MovingGameObject(r, otype, texturePath, uniqueID), m_current_walking_speed(2.0), m_jump_start_velocity(10.0), m_jumping(false), m_want_jump(false)
-  {}
+  Player( Rect r, GameObject::ObjectType otype, std::string texturePath, int uniqueID );
   
   void Init();
   
@@ -36,6 +34,8 @@ class Player : public MovingGameObject
   
   private:
     
+  float vx;
+  float vy;
   //const int m_normal_movement_speed;
   float m_current_walking_speed;
   const float m_jump_start_velocity;

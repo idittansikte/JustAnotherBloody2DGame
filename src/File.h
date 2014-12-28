@@ -4,7 +4,7 @@
 #include <string>
 
 #include "LevelData.h"
-#include "GameObject.h"
+#include "gameobjects/GameObject.h"
 
 class File
 {
@@ -12,7 +12,7 @@ class File
     File(){}
     ~File(){}
     
-    LevelData load(std::string filename);
+    LevelData load(std::string filepath, std::string filename);
     
     void save(LevelData lData);
 };

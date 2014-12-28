@@ -10,26 +10,25 @@ void MovingGameObject::Init()
 
 bool MovingGameObject::collidedFromLeft(GameObject* otherObject)
 {
-    return m_previous_position.x + this->getWidth() < otherObject->getPos_x() && // was not colliding
+    return m_previous_position.x + this->getWidth() <= otherObject->getPos_x() && // was not colliding
            getPos_x() + this->getWidth() > otherObject->getPos_x();
 }
 
 bool MovingGameObject::collidedFromRight(GameObject* otherObject)
 {
-    return m_previous_position.x > otherObject->getPos_x() + otherObject->getWidth() && // was not colliding
+    return m_previous_position.x >= otherObject->getPos_x() + otherObject->getWidth() && // was not colliding
            this->getPos_x() < otherObject->getPos_x() + otherObject->getWidth();
 }
 
 bool MovingGameObject::collidedFromTop(GameObject* otherObject)
 {
-    return m_previous_position.y + this->getHeight() < otherObject->getPos_y() && // was not colliding
-           this->getPos_y() + this->getHeight() >= otherObject->getPos_y();
+    return m_previous_position.y + this->getHeight() <= otherObject->getPos_y() && // was not colliding
+           this->getPos_y() + this->getHeight() > otherObject->getPos_y();
 }
 
-bool MovingGameObject::collidedFromBottom(GameObject* otherObject)
-{
-    return m_previous_position.y > otherObject->getPos_y() + otherObject->getHeight() && // was not colliding
-           this->getPos_y() <= otherObject->getPos_y() + otherObject->getHeight();
+bool MovingGameObject::collidedFromBottom(GameObject* otherObject){
+    return m_previous_position.y >= otherObject->getPos_y() + otherObject->getHeight() && // was not colliding
+           this->getPos_y() < otherObject->getPos_y() + otherObject->getHeight();
 }
 
 void MovingGameObject::HandleCollision(GameObject* otherObject)
@@ -41,41 +40,49 @@ void MovingGameObject::HandleCollision(GameObject* otherObject)
   if ( otherObject->getObjectType() == GameObject::PLATFORM ){
     
     if ( collidedFromTop(otherObject) ){ //Collied  top
-      updatePos_y( otherObject->getPos_y() );
+      //apply_velocity_y(otherObject->getPos_y()-1);
+      m_previous_position.y = otherObject->getPos_y()-this->getHeight();
+      updatePos_y( m_previous_position.y );
+      
       contactBottom = true;
-      turnOff_falling();
     }
     
-    if ( collidedFromBottom(otherObject) ){ 
-      updatePos_y(m_previous_position.y);
+    if ( collidedFromBottom(otherObject) ){
+      m_previous_position.y = otherObject->getPos_y() + otherObject->getHeight();
+      updatePos_y( m_previous_position.y );
+      //apply_velocity_y(otherObject->getPos_y()-1);
       contactTop = true;
     }
     
-    if ( collidedFromLeft(otherObject) ){ 
+    if ( collidedFromLeft(otherObject) ){
+      m_previous_position.x = otherObject->getPos_x()-getWidth();
       updatePos_x(m_previous_position.x);
       contactRight = true;
     }
     
-    if ( collidedFromRight(otherObject) ){ 
+    if ( collidedFromRight(otherObject) ){
+      m_previous_position.x = otherObject->getPos_x()+otherObject->getWidth();
       updatePos_x(m_previous_position.x);
       contactLeft = true;
     }
   }
 }
 
-void MovingGameObject::apply_physics(){
-  if ( m_falling && !contactBottom ){
+void MovingGameObject::apply_gravitaion(){
   
     if( m_current_fallspeed < m_max_fallspeed ){
       m_current_fallspeed += 0.5;
     }
     
+    if ( contactBottom ){
+        m_current_fallspeed = 0;
+    }
+    
     apply_velocity_y(m_current_fallspeed);
-  }
 }
 
 void MovingGameObject::turnOn_falling(){
-  m_current_fallspeed = 0;
+  //m_current_fallspeed = 0;
   m_falling = true;
 }
 
@@ -88,7 +95,7 @@ void MovingGameObject::CleanupFrame(){
   contactBottom = false;
   contactLeft = false;
   contactRight = false;
-  turnOn_falling(); // Always turn on falling to next frame..
+  //turnOn_falling(); // Always turn on falling to next frame..
 }
 
 void MovingGameObject::Update()
@@ -105,8 +112,6 @@ void MovingGameObject::Update()
     else
       updatePos_y(m_previous_position.y);
   }
-  
-  apply_physics();
   
   //CleanupFrame(); // Reset all collie booleans for next frame... 
 }
@@ -129,6 +134,6 @@ void MovingGameObject::apply_velocity_x(float x_){
 
 void MovingGameObject::apply_velocity_y(float y_){
   int y = round(y_);
-  this->m_previous_position = Point(this->m_previous_position.x, this->getPoint().y);
-  updatePos( Point(getRect().x, getRect().y + y));
+  this->m_previous_position.y = this->getPos_y();
+  updatePos_y( getRect().y + y);
 }

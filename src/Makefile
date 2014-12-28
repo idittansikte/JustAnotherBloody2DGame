@@ -2,15 +2,17 @@
 CCC = g++ -std=c++11
 FLAGS = -pedantic -w
 SDL_FLAGS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+src = src/
+gameobject = gameobjects/
 
 OFILES = Game.o Renderer.o PlayState.o PauseState.o MenuState.o Input.o Collision.o Level.o GameObject.o MovingGameObject.o StaticGameObject.o Player.o Platform.o Enemy.o
 
-all: main.cc $(OFILES)
+all: $(src)main.cc $(OFILES)
 	# Linking...
-	@ $(CCC) $(FLAGS) -o theGame main.cc $(OFILES) $(SDL_FLAGS)
+	@ $(CCC) $(FLAGS) -o theGame $(src)main.cc $(OFILES) $(SDL_FLAGS)
 	# Build successful!
 
-Renderer.o: Renderer.cc Renderer.h Rect.h Constants.h
+Renderer.o: $(src)Renderer.cc $(src)Renderer.h $(src)Rect.h $(src)Constants.h
 	# Compiling $<...
 	@ $(CCC) $(FLAGS) -c Renderer.cc $<
 

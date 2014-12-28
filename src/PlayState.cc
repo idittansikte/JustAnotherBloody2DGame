@@ -47,7 +47,7 @@ void PlayState::HandleEvents(Game* game)
       
   if(Input::getInstance()->is_key_pressed(KEY_LEFT))
       m_Level->getPlayer()->movement_left();
-      
+  
   if(Input::getInstance()->is_key_pressed(KEY_UP))
       m_Level->getPlayer()->movement_up();
       

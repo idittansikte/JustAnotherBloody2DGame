@@ -11,10 +11,6 @@ struct LevelData
 {
   LevelData(){}
   
-  vector<GameObject*> vMoving;
-  vector<GameObject*> vStatics;
-  vector<GameObject*> vBackgrounds;
-  vector<GameObject*> vDecorations;
   
   Player* pPlayer;
   

@@ -24,7 +24,9 @@ void Level::Init()
   
   addGameObject(200,0,100,100, GameObject::PLAYER, PLAYER_FILEPATH);
   addGameObject(200,400,100,100, GameObject::PLATFORM, BLOCK_FILEPATH);
-  
+  addGameObject(300,350,100,100, GameObject::PLATFORM, BLOCK_FILEPATH);
+  addGameObject(100,350,100,100, GameObject::PLATFORM, BLOCK_FILEPATH);
+  addGameObject(300,100,100,100, GameObject::PLATFORM, BLOCK_FILEPATH);
     //Update Only needed once cuz static object wont move...
   m_StaticColliesGrid->update_grid(m_vStaticGameObjects, m_Player->getCenterPos(), false );
 }
@@ -54,21 +56,6 @@ void Level::Update()
 {
   // Update the grid of moving objects
   m_MovingColliesGrid->update_grid(m_vMovingGameObjects, Point(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), false );
-
-  // Check collision between static and moving objects
-  vector<pair<GameObject*, GameObject*>> collies = m_MovingColliesGrid->getColliedPairs(m_StaticColliesGrid);
-  
-  // Handle collied pairs if there where any...
-  if ( !collies.empty() ){
-    for (auto it : collies){
-      it.first->HandleCollision(it.second);
-      it.second->HandleCollision(it.first);
-      std::cout << "Collied: " << it.first->getRect().x << " " << it.second->getRect().x << std::endl;
-    }
-  }
-  else{
-    std::cout << "No collies \n";
-  }
     
   // Update all static objects
   for (auto it : m_vStaticGameObjects)
@@ -81,6 +68,21 @@ void Level::Update()
     {
       it->Update();
     }
+  
+  // Check collision between static and moving objects
+  vector<pair<GameObject*, GameObject*>> collies = m_MovingColliesGrid->getColliedPairs(m_StaticColliesGrid);
+ 
+  // Handle collied pairs if there where any...
+  if ( !collies.empty() ){
+    for (auto it : collies){
+      it.first->HandleCollision(it.second);
+      it.second->HandleCollision(it.first);
+      //std::cout << "Collied: " << it.first->getRect().x << " " << it.second->getRect().x << std::endl;
+    }
+  }
+  else{
+    //std::cout << "No collies \n";
+  }
 }
 
 void Level::Draw(Renderer* renderer)

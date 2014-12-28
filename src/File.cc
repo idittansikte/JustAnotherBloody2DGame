@@ -1,7 +1,9 @@
 #include "File.h"
 
 #include <fstream>
+#include <iostream>
 #include <vector>
+#include "gameobjects/Platform.h"
 
 LevelData File::load(std::string filepath, std::string filename)
 {
@@ -22,7 +24,7 @@ LevelData File::load(std::string filepath, std::string filename)
     
     load >> ObjectType;
     
-    if ( ObjectType == GameObject::Platform )
+    if ( ObjectType == GameObject::PLATFORM )
     {
       
     }
@@ -33,7 +35,7 @@ LevelData File::load(std::string filepath, std::string filename)
   }
   else
   {
-    printf("Could not open: ", path, "\n");
+    std::cerr << "Could not open: " << path <<  "\n";
   }
 }
 
