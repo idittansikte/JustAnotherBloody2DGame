@@ -10,58 +10,63 @@ void MovingGameObject::Init()
 
 bool MovingGameObject::collidedFromLeft(GameObject* otherObject)
 {
-    return m_previous_position.x + this->getWidth() <= otherObject->getPos_x() && // was not colliding
-           getPos_x() + this->getWidth() > otherObject->getPos_x();
+  Rect A = this->getCollisionRect();
+  Rect B = otherObject->getCollisionRect();
+    return m_previous_position.x + A.w <= B.x && // was not colliding
+           A.x + A.w > B.x;
 }
 
 bool MovingGameObject::collidedFromRight(GameObject* otherObject)
 {
-    return m_previous_position.x >= otherObject->getPos_x() + otherObject->getWidth() && // was not colliding
-           this->getPos_x() < otherObject->getPos_x() + otherObject->getWidth();
+  Rect A = this->getCollisionRect();
+  Rect B = otherObject->getCollisionRect();
+    return m_previous_position.x >= B.x + B.w && // was not colliding
+           A.x < B.x + B.w;
 }
 
 bool MovingGameObject::collidedFromTop(GameObject* otherObject)
 {
-    return m_previous_position.y + this->getHeight() <= otherObject->getPos_y() && // was not colliding
-           this->getPos_y() + this->getHeight() > otherObject->getPos_y();
+  Rect A = this->getCollisionRect();
+  Rect B = otherObject->getCollisionRect();
+    return m_previous_position.y + A.h <= B.y && // was not colliding
+           A.y + A.h > B.y;
 }
 
 bool MovingGameObject::collidedFromBottom(GameObject* otherObject){
-    return m_previous_position.y >= otherObject->getPos_y() + otherObject->getHeight() && // was not colliding
-           this->getPos_y() < otherObject->getPos_y() + otherObject->getHeight();
+  Rect A = this->getCollisionRect();
+  Rect B = otherObject->getCollisionRect();
+    return m_previous_position.y >= B.y + B.h && // was not colliding
+           A.y < B.y + B.h;
 }
 
 void MovingGameObject::HandleCollision(GameObject* otherObject)
 {
-  Rect this_r = this->getRect();
-  Rect other_r = otherObject->getRect();
   
+  Rect A = this->getCollisionRect();
+  Rect B = otherObject->getCollisionRect();
   
   if ( otherObject->getObjectType() == GameObject::PLATFORM ){
     
     if ( collidedFromTop(otherObject) ){ //Collied  top
-      //apply_velocity_y(otherObject->getPos_y()-1);
-      m_previous_position.y = otherObject->getPos_y()-this->getHeight();
+      m_previous_position.y = B.y-A.h;
       updatePos_y( m_previous_position.y );
-      
       contactBottom = true;
     }
     
     if ( collidedFromBottom(otherObject) ){
-      m_previous_position.y = otherObject->getPos_y() + otherObject->getHeight();
+      m_previous_position.y = B.y + B.h;
       updatePos_y( m_previous_position.y );
-      //apply_velocity_y(otherObject->getPos_y()-1);
       contactTop = true;
     }
     
     if ( collidedFromLeft(otherObject) ){
-      m_previous_position.x = otherObject->getPos_x()-getWidth();
+      m_previous_position.x = B.x-A.w;
       updatePos_x(m_previous_position.x);
       contactRight = true;
     }
     
     if ( collidedFromRight(otherObject) ){
-      m_previous_position.x = otherObject->getPos_x()+otherObject->getWidth();
+      m_previous_position.x = B.x+B.w;
       updatePos_x(m_previous_position.x);
       contactLeft = true;
     }
@@ -70,19 +75,23 @@ void MovingGameObject::HandleCollision(GameObject* otherObject)
 
 void MovingGameObject::apply_gravitaion(){
   
-    if( m_current_fallspeed < m_max_fallspeed ){
-      m_current_fallspeed += 0.5;
+    if( vy < vy_max ){ // Max fallspeed
+      vy += ay;
     }
     
-    if ( contactBottom ){
-        m_current_fallspeed = 0;
+    if ( contactBottom ){ // Reset if contact with feets, otherwise it will never reset,,
+      vy = 0;
     }
     
-    apply_velocity_y(m_current_fallspeed);
+    //Friction
+    if(vx < 0)
+      vx += 0.3;
+    if(vx > 0) 
+      vx -= 0.3;
+    
 }
 
 void MovingGameObject::turnOn_falling(){
-  //m_current_fallspeed = 0;
   m_falling = true;
 }
 
@@ -95,25 +104,12 @@ void MovingGameObject::CleanupFrame(){
   contactBottom = false;
   contactLeft = false;
   contactRight = false;
-  //turnOn_falling(); // Always turn on falling to next frame..
 }
 
 void MovingGameObject::Update()
 {
-  
-  //If moving object is outside world, move back. --->>>> world height and world width need to be implemented!
-  Rect r = this->getRect();
-  if ( r.x < 0 || r.y < 0 )
-  {
-    if (r.x < 0 && r.y < 0)
-      updatePos(m_previous_position);
-    else if ( r.x < 0 )
-      updatePos_x(m_previous_position.x);
-    else
-      updatePos_y(m_previous_position.y);
-  }
-  
-  //CleanupFrame(); // Reset all collie booleans for next frame... 
+  apply_velocity_x(vx);
+  apply_velocity_y(vy);
 }
 
 void MovingGameObject::Draw(Renderer* renderer)
@@ -127,13 +123,17 @@ void MovingGameObject::Clean()
 }
 
 void MovingGameObject::apply_velocity_x(float x_){
+  Rect A = this->getCollisionRect();
   int x = round(x_);
-  this->m_previous_position = Point(this->getPoint().x, this->m_previous_position.y );
-  this->updatePos( Point(this->getRect().x + x, this->getRect().y));
+  
+  this->m_previous_position.x = A.x ;
+  this->updatePos_x( A.x + x );
 }
 
 void MovingGameObject::apply_velocity_y(float y_){
+  Rect A = this->getCollisionRect();
   int y = round(y_);
-  this->m_previous_position.y = this->getPos_y();
-  updatePos_y( getRect().y + y);
+  
+  this->m_previous_position.y = A.y;
+  updatePos_y( A.y + y);
 }

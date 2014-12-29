@@ -22,11 +22,32 @@ Level::~Level()
 void Level::Init()
 {
   
-  addGameObject(200,0,100,100, GameObject::PLAYER, PLAYER_FILEPATH);
-  addGameObject(200,400,100,100, GameObject::PLATFORM, BLOCK_FILEPATH);
-  addGameObject(300,350,100,100, GameObject::PLATFORM, BLOCK_FILEPATH);
-  addGameObject(100,350,100,100, GameObject::PLATFORM, BLOCK_FILEPATH);
-  addGameObject(300,100,100,100, GameObject::PLATFORM, BLOCK_FILEPATH);
+  addGameObject(200,0,50,50, GameObject::PLAYER, PLAYER_FILEPATH);
+  
+  addGameObject(200,400,100,100, GameObject::PLATFORM, BLOCK3DBack_FILEPATH);
+  addGameObject(300,350,100,100, GameObject::PLATFORM, BLOCK3DBack_FILEPATH);
+  addGameObject(100,350,100,100, GameObject::PLATFORM, BLOCK3DBack_FILEPATH);
+  addGameObject(300,100,100,100, GameObject::PLATFORM, BLOCK3DBack_FILEPATH);
+  
+  addGameObject(200,400,100,100, GameObject::INVI_PLATFORM, BLOCK3DFront_FILEPATH);
+  addGameObject(300,350,100,100, GameObject::INVI_PLATFORM, BLOCK3DFront_FILEPATH);
+  addGameObject(100,350,100,100, GameObject::INVI_PLATFORM, BLOCK3DFront_FILEPATH);
+  addGameObject(300,100,100,100, GameObject::INVI_PLATFORM, BLOCK3DFront_FILEPATH);
+  
+  
+  addGameObject(381,350,100,100, GameObject::PLATFORM, BLOCK3DBack_FILEPATH);
+  addGameObject(381,350,100,100, GameObject::INVI_PLATFORM, BLOCK3DFront_FILEPATH);
+  
+  addGameObject(462,350,100,100, GameObject::PLATFORM, BLOCK3DBack_FILEPATH);
+  addGameObject(462,350,100,100, GameObject::INVI_PLATFORM, BLOCK3DFront_FILEPATH);
+  
+  addGameObject(543,350,100,100, GameObject::PLATFORM, BLOCK3DBack_FILEPATH);
+  addGameObject(543,350,100,100, GameObject::INVI_PLATFORM, BLOCK3DFront_FILEPATH);
+  
+  addGameObject(624,350,100,100, GameObject::PLATFORM, BLOCK3DBack_FILEPATH);
+  addGameObject(624,350,100,100, GameObject::INVI_PLATFORM, BLOCK3DFront_FILEPATH);
+  //addGameObject(350,400,100,100, GameObject::PLATFORM, BLOCK3DBack_FILEPATH);
+  
     //Update Only needed once cuz static object wont move...
   m_StaticColliesGrid->update_grid(m_vStaticGameObjects, m_Player->getCenterPos(), false );
 }
@@ -34,11 +55,14 @@ void Level::Init()
 void Level::addGameObject(int x, int y, int w, int h, GameObject::ObjectType OType, std::string texturePath)
 {
   if (OType == GameObject::PLAYER){
-    m_Player = new Player(Rect(x,y,w,h), OType, texturePath, m_iUniqueCounter++);
+    m_Player = new Player(Rect(x,y,w,h), Rect(1,12,40,40),  OType, texturePath, m_iUniqueCounter++);
     m_vMovingGameObjects.push_back(m_Player);
   }
   else if ( OType == GameObject::PLATFORM ){
-    m_vStaticGameObjects.push_back(new Platform(Rect(x,y,w,h), OType, texturePath, m_iUniqueCounter++));
+    m_vStaticGameObjects.push_back(new Platform(Rect(x,y,w,h), Rect(12,12,79,79), OType, texturePath, m_iUniqueCounter++));
+  }
+  else if ( OType == GameObject::INVI_PLATFORM ){
+    m_vMiscGameObjects.push_back(new Platform(Rect(x,y,w,h), Rect(x,y,w,h), OType, texturePath, m_iUniqueCounter++));
   }
 }
 
@@ -68,7 +92,7 @@ void Level::Update()
     {
       it->Update();
     }
-  
+    
   // Check collision between static and moving objects
   vector<pair<GameObject*, GameObject*>> collies = m_MovingColliesGrid->getColliedPairs(m_StaticColliesGrid);
  
@@ -81,7 +105,7 @@ void Level::Update()
     }
   }
   else{
-    //std::cout << "No collies \n";
+     //std::cout << "No collies \n";
   }
 }
 
@@ -89,18 +113,23 @@ void Level::Draw(Renderer* renderer)
 {
   //Update camera to the current center of SCREEN before any other draws on map...
   renderer->updateCamera(m_Player->getRect(), m_iWorldWidth, m_iWorldHeight);
-  
+
+    // Draw all static objects
+    for (auto itt : m_vStaticGameObjects)
+    {
+      itt->Draw(renderer);
+    }
+    
     // Draw all moving objects
     for (auto it : m_vMovingGameObjects)
     {
       it->Draw(renderer);
     }
     
-    
-    // Draw all static objects
-    for (auto itt : m_vStaticGameObjects)
+    // Draw all Misc objects
+    for (auto it : m_vMiscGameObjects)
     {
-      itt->Draw(renderer);
+      it->Draw(renderer);
     }
 }
 

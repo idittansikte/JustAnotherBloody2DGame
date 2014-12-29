@@ -39,12 +39,15 @@ void Collision::update_grid( vector<GameObject*> ObjectList, Point center, bool 
           continue;
 	}
       }
-    
+      
+     aabbWorldIntersection(cObject);
+     
+      
       // Get witch [start and end] column and cell object should be placed in  
-      cObjectMinX = cObject->getRect().x / m_CollisionGridSize;
-      cObjectMinY = cObject->getRect().y / m_CollisionGridSize;
-      cObjectMaxX = ( cObject->getRect().x + cObject->getRect().w ) / m_CollisionGridSize;
-      cObjectMaxY = ( cObject->getRect().y + cObject->getRect().h ) / m_CollisionGridSize;
+      cObjectMinX = cObject->getCollisionRect().x / m_CollisionGridSize;
+      cObjectMinY = cObject->getCollisionRect().y / m_CollisionGridSize;
+      cObjectMaxX = ( cObject->getCollisionRect().x + cObject->getCollisionRect().w ) / m_CollisionGridSize;
+      cObjectMaxY = ( cObject->getCollisionRect().y + cObject->getCollisionRect().h ) / m_CollisionGridSize;
       // For every grid column object is inside:
       for ( int cX{cObjectMinX}; cX <= cObjectMaxX; ++cX )
 	{
@@ -100,11 +103,11 @@ vector<pair<GameObject*, GameObject*>> Collision::getColliedPairs(Collision* oth
             
 		  std::string hashA = to_string(GameObjectA->getUniqueID()) + ':' + to_string(GameObjectB->getUniqueID());
 		  std::string hashB = to_string(GameObjectB->getUniqueID()) + ':' + to_string(GameObjectA->getUniqueID());
-            
+
 		  if( !m_mChecked[hashA] && !m_mChecked[hashB] )
 		    {
 		      m_mChecked[hashA] = m_mChecked[hashB] = true;
-                
+                      
 		      if ( aabbIntersection(GameObjectA, GameObjectB) )
 			{
 			  cColliedPairs.push_back( make_pair( GameObjectA, GameObjectB ) );
@@ -124,8 +127,8 @@ int get_grid_col(int x_value)
 
 bool Collision::aabbIntersection(GameObject* objA, GameObject* objB)
 {
-  Rect a = objA->getRect();
-  Rect b = objB->getRect();
+  Rect a = objA->getCollisionRect();
+  Rect b = objB->getCollisionRect();
   
   int aBottom, aUpper, aLeft, aRight,
     bBottom, bUpper, bLeft, bRight;
@@ -143,6 +146,23 @@ bool Collision::aabbIntersection(GameObject* objA, GameObject* objB)
   if ( ( aBottom > bUpper ) && ( aRight > bLeft )
        && ( aUpper < bBottom ) && ( aLeft < bRight ) )
     return true;
+  
   return false;
   
+}
+
+void Collision::aabbWorldIntersection(GameObject* obj)
+{
+    //If moving object is outside world, move back. --->>>> world height and world width need to be implemented!
+  Rect a = obj->getCollisionRect();
+
+  if ( a.x < 0 )
+    obj->updatePos_x(0);
+  if ( a.y < 0 )
+    obj->updatePos_y(0);
+    
+  if (a.x + a.w > WORLD_WIDTH-500)
+    obj->updatePos_x(WORLD_WIDTH-a.w-500);
+  if (a.y + a.h > WORLD_HEIGHT-500)
+    obj->updatePos_y(WORLD_HEIGHT-a.h-500);
 }

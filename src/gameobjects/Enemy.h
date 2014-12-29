@@ -14,11 +14,12 @@ class Enemy : public MovingGameObject
     
   Enemy(
 	Rect r,
+	Rect c,
 	GameObject::ObjectType otype,
 	std::string texturePath,
 	int uniqueID
 	):
-    MovingGameObject(r, otype, texturePath, uniqueID)
+    MovingGameObject(r, c, otype, texturePath, uniqueID)
   {}
   
   void Init();

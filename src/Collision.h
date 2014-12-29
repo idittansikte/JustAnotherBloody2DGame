@@ -22,6 +22,7 @@ public:
   vector<pair<GameObject*, GameObject*>> getColliedPairs(Collision* otherList = nullptr);
   
   bool aabbIntersection(GameObject* objA, GameObject* objB);
+  void aabbWorldIntersection(GameObject* obj);
   
   int get_grid_col(int x_value);
   

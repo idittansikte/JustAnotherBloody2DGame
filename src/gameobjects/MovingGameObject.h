@@ -36,24 +36,31 @@ class MovingGameObject : public GameObject
     void apply_velocity_y(float y);
     
   protected:
-    MovingGameObject( Rect r, GameObject::ObjectType otype, std::string texturePath, int uniqueID)
-      : GameObject(r, otype, texturePath, uniqueID), m_max_fallspeed(10)
+    MovingGameObject( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID)
+      : GameObject(r, c, otype, texturePath, uniqueID), vx(0), vy(0), ax(0.5), ay(0.5)
     {}
     
     //For collision detection
-    bool contactTop;
-    bool contactBottom;
-    bool contactLeft;
-    bool contactRight;
+    bool contactTop{false};
+    bool contactBottom{false};
+    bool contactLeft{false};
+    bool contactRight{false};
     float m_current_fallspeed;
     
+    float vx;
+    float vy;
+    float ax; // acceleration X
+    float ay; // acceleration Y
+    const float vy_max{15};
+    const float vx_max{6};
+    
   private:
-
+  
   Point m_previous_position; //
   Point m_velocity;
 
   bool m_falling;
-  const float m_max_fallspeed{15};
+  
   
     
 };

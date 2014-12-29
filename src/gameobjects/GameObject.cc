@@ -2,8 +2,9 @@
 
 #include <iostream>
 
-GameObject::GameObject( Rect r, ObjectType oType, std::string texturePath, int uniqueID)
-      : m_rRect(r),
+GameObject::GameObject( Rect r, Rect c, ObjectType oType, std::string texturePath, int uniqueID):
+      m_rRect(r),
+      m_rcollisionRect(c),
       m_eObjectType(oType),
       m_sTexturePath(texturePath),
       m_iUniqueID(uniqueID),
@@ -47,4 +48,9 @@ void GameObject::setAlive(){
 
 bool GameObject::isDead(){
   return m_dead;
+}
+
+Rect GameObject::getCollisionRect(){
+  return Rect(m_rRect.x + m_rcollisionRect.x, m_rRect.y + m_rcollisionRect.y,
+	      m_rcollisionRect.w, m_rcollisionRect.h);
 }

@@ -25,8 +25,8 @@ class StaticGameObject : public GameObject
     void Clean();
   
   protected:
-    StaticGameObject( Rect r, GameObject::ObjectType otype, std::string texturePath , int uniqueID)
-      : GameObject(r, otype, texturePath, uniqueID)
+    StaticGameObject( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath , int uniqueID)
+      : GameObject(r, c, otype, texturePath, uniqueID)
     {}
   
   private:

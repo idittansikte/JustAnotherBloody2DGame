@@ -12,8 +12,8 @@ class Platform : public StaticGameObject
 {
   public:
     
-  Platform( Rect r, GameObject::ObjectType otype, std::string texturePath, int uniqueID )
-    : StaticGameObject(r, otype, texturePath, uniqueID)
+  Platform( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID )
+    : StaticGameObject(r, c, otype, texturePath, uniqueID)
   {}
   
   void Init();

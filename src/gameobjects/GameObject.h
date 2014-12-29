@@ -11,7 +11,7 @@
 class GameObject
 {
   public:
-    enum ObjectType {PLAYER, PLATFORM, ENEMY};
+    enum ObjectType {PLAYER, PLATFORM, INVI_PLATFORM, ENEMY};
     
     virtual void Init();
     
@@ -25,18 +25,13 @@ class GameObject
     
     //Objects position functions
     Rect getRect(){ return m_rRect; }
-    Point getPoint(){ return Point(m_rRect.x, m_rRect.y); }
-    int getPos_x(){ return m_rRect.x; }
-    int getPos_y(){ return m_rRect.y; }
-    
-    int getWidth(){ return m_rRect.w; }
-    int getHeight(){ return m_rRect.h; }
+    Rect getCollisionRect();
     
     Point getCenterPos(){ return Point(m_rRect.x + (m_rRect.w/2), m_rRect.y + (m_rRect.h/2)); }
     
-    void updatePos(Point r){ m_rRect.x = r.x; m_rRect.y = r.y; }
-    void updatePos_x(int x){ m_rRect.x = x; }
-    void updatePos_y(int y){ m_rRect.y = y; }
+    void updatePos(Point r){ m_rRect.x = r.x - m_rcollisionRect.x; m_rRect.y = r.y - m_rcollisionRect.x; }
+    void updatePos_x(int x){ m_rRect.x = x - m_rcollisionRect.x; }
+    void updatePos_y(int y){ m_rRect.y = y - m_rcollisionRect.y; }
     
     //Objects texture and types
     std::string getTexturePath() { return m_sTexturePath; }
@@ -50,16 +45,10 @@ class GameObject
     void setDead();
     void setAlive();
     bool isDead();
-
-    // Collision handling for each object
-    //void setContactTop(){ contactTop = true; };
-    //void setContactBottom(){ contactBottom = true; };
-    //void setContactLeft(){ contactLeft = true; };
-    //void setContactRight(){ contactRight = true; };
     
   protected:
     
-    GameObject( Rect r, ObjectType oType, std::string texturePath, int uniqueID);
+    GameObject( Rect r, Rect c, ObjectType oType, std::string texturePath, int uniqueID);
     
   private:
     
@@ -67,7 +56,8 @@ class GameObject
     
     const std::string m_sTexturePath;
     
-    Rect m_rRect;
+    Rect m_rRect; // very far sides of sprite
+    const Rect m_rcollisionRect; // collision detection rectangle of sprite
     
     bool m_dead;
     

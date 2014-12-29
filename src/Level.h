@@ -39,6 +39,7 @@ class Level
     LevelData m_LevelData;
     std::vector<GameObject*> m_vMovingGameObjects;
     std::vector<GameObject*> m_vStaticGameObjects;
+    std::vector<GameObject*> m_vMiscGameObjects;
     Collision* m_StaticColliesGrid;
     Collision* m_MovingColliesGrid;
     Player* m_Player;
