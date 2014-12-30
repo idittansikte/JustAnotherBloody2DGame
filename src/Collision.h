@@ -17,6 +17,8 @@ public:
   Collision(int ww, int wh);
   ~Collision(){}
   
+  void CleanGrid();
+  
   void update_grid(vector<GameObject*> ObjectList, Point center, bool update_only_visable = true);
   
   vector<pair<GameObject*, GameObject*>> getColliedPairs(Collision* otherList = nullptr);

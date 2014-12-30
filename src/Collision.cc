@@ -11,11 +11,14 @@ Collision::Collision(int ww, int wh):
   WORLD_HEIGHT(wh)
 {}
 
+void Collision::CleanGrid(){
+  grid.clear();
+}
+
 void Collision::update_grid( vector<GameObject*> ObjectList, Point center, bool update_only_visable )
 {
   //std::cout << "Updating collision grid... " << std::endl;
   allocatedCells = 0;
-  grid.clear();
   m_isGrid = true;
   int gridWidth = WORLD_WIDTH / m_CollisionGridSize;
   int gridHeight = WORLD_HEIGHT / m_CollisionGridSize;
@@ -33,6 +36,9 @@ void Collision::update_grid( vector<GameObject*> ObjectList, Point center, bool 
     {
 	GameObject* cObject = ObjectList[i];
     
+      if(cObject->isDead())
+        continue;
+      
       // Check if Object is outside of SCREEN_SIZE size, dont update... (because we dont want any uneeded checked that drain power from our system)
       if (update_only_visable){
 	if ( !cObject->is_in_screen_range(center) ){
@@ -89,7 +95,10 @@ vector<pair<GameObject*, GameObject*>> Collision::getColliedPairs(Collision* oth
 	  for( unsigned int k{}; k < this->grid[i][j].size(); ++k )
 	    {
 	      GameObject* GameObjectA = this->grid[i][j][k];
-        
+              
+              if(GameObjectA->isDead())
+                continue;
+              
 	      unsigned int l;
 	      if(otherList == this)
 		l = k+1; // if we check this with this, we dont need to scan whole list all the time.
@@ -100,6 +109,9 @@ vector<pair<GameObject*, GameObject*>> Collision::getColliedPairs(Collision* oth
 	      for(; l < otherList->grid[i][j].size(); ++l )
 		{
 		  GameObject* GameObjectB = otherList->grid[i][j][l];
+            
+                  if(GameObjectB->isDead())
+                    continue;
             
 		  std::string hashA = to_string(GameObjectA->getUniqueID()) + ':' + to_string(GameObjectB->getUniqueID());
 		  std::string hashB = to_string(GameObjectB->getUniqueID()) + ':' + to_string(GameObjectA->getUniqueID());

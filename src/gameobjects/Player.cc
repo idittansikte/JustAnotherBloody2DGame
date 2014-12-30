@@ -38,6 +38,7 @@ void Player::Update()
 
 void Player::Draw(Renderer* renderer)
 {
+  cameraAdjustment = renderer->getCameraAdjustment();
   GameObject::Draw(renderer);
   renderPistol(renderer);
 }
@@ -67,10 +68,12 @@ void Player::movement_down(){
 }
 
 void Player::movement_shoot(){
-  Rect p_pos = getRect();
-  ProjectileManager::getInstance()->AddProjectile(BULLET_FILEPATH, 0, GameObject::PLAYER, Rect(p_pos.x,p_pos.y,40,40),
-                                  Point(Input::getInstance()->get_mouse_x()+getCenterPos().x - (SCREEN_WIDTH / 2),
-					Input::getInstance()->get_mouse_y()+getCenterPos().y - (SCREEN_HEIGHT / 2) ), 250, 3, 100);
+  
+  //double distance = sqrt( (pistolHole.x - getCenterPos().x)*(pistolHole.x - getCenterPos().x) + (pistolHole.y - getCenterPos().y)*(pistolHole.y - getCenterPos().y) );
+  
+  ProjectileManager::getInstance()->AddProjectile(BULLET_FILEPATH, m_uniqueTag++, GameObject::PLAYER, Rect(pistolHole.x,pistolHole.y,40,40),
+                                  Point(Input::getInstance()->get_mouse_x()+ cameraAdjustment.x,
+					Input::getInstance()->get_mouse_y()+ cameraAdjustment.y ), 250, 3, 100);
 }
 
 void Player::JumpHandler(){
@@ -113,14 +116,14 @@ void Player::renderPistol(Renderer* renderer){
   double angle = ( atan2(deltaY,deltaX) * 180 ) / 3.14;
   
   // Set pistol on circel around player...
-  int posx = center.x + radius * cos(angle * 3.14/180);
-  int posy = center.y + radius * sin(angle * 3.14/180);
+  pistolHole.x = center.x + radius * cos(angle * 3.14/180);
+  pistolHole.y = center.y + radius * sin(angle * 3.14/180);
   
   //Flip pistol if it is upsidedown
   if (angle < 90 && angle > -90)
-    renderer->drawTexture( Rect(posx,posy,40,40), "imgs/pistol.png", true, Rect(0,0,50,50), false, false, centerSize, angle );
+    renderer->drawTexture( Rect(pistolHole.x,pistolHole.y,40,40), "imgs/pistol.png", true, Rect(0,0,50,50), false, false, centerSize, angle );
   else
-    renderer->drawTexture( Rect(posx,posy,40,40), "imgs/pistol.png", true, Rect(0,0,50,50), true, false, centerSize, angle );
+    renderer->drawTexture( Rect(pistolHole.x,pistolHole.y,40,40), "imgs/pistol.png", true, Rect(0,0,50,50), true, false, centerSize, angle );
 }
 
 

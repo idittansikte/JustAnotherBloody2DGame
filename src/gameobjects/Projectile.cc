@@ -15,15 +15,14 @@ Projectile::Projectile(
 	int speed,
 	int damage
 	):
-    MovingGameObject(r, c, otype, texturePath, uniqueID), m_shooterType(shooterType), m_distance(distance)
+    MovingGameObject(r, c, otype, texturePath, uniqueID), m_shooterType(shooterType), m_distance(distance), m_damage(damage)
   {
-    int deltaX, deltaY;
-    deltaX = targetPos.x - r.x;
-    deltaY = targetPos.y - r.y;
-    angle = ( atan2(deltaY,deltaX) * 180 ) / 3.14;
     
-    //float endPosx = r.x + distance * cos(angle * 3.14/180);
-    //float endPosy = r.y + distance * sin(angle * 3.14/180);
+    //Calculate angle of direction
+    int deltaX = targetPos.x - r.x;
+    int deltaY = targetPos.y - r.y;
+    angle = ( atan2(deltaY,deltaX) * 180 ) / 3.14;
+
     m_startPos = Point(r.x, r.y);
   }
 
@@ -34,14 +33,15 @@ void Projectile::Init()
 
 void Projectile::HandleCollision(GameObject* otherObject)
 {
-  
+  std::cout << "YO \n";
+  this->setDead();
 }
 
 void Projectile::Update()
 {
   Rect pos = this->getRect();
   
-  float velocity = 10.0;
+  float velocity = 12.0;
   
   
   // Calculate distance between now and startpos

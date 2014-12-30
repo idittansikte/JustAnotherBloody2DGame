@@ -14,24 +14,18 @@ ProjectileManager::~ProjectileManager()
 
 
 void ProjectileManager::CleanupDead(){
-    ;
+    m_projectiles.erase(std::remove_if(m_projectiles.begin(), m_projectiles.end(), [](GameObject* p) { return p->isDead() == true; }), m_projectiles.end());
 }
 
 void ProjectileManager::Update(){
     
-    for (auto it : m_projectiles)
-    {
-	// Cleanup deads...
-	if(it->isDead()){
-	    std::swap( it, m_projectiles.back() );
-	    m_projectiles.pop_back();
-	}
+    CleanupDead();
+    
+    for (std::vector<GameObject*>::iterator it = m_projectiles.begin(); it != m_projectiles.end(); ++it){
 	// Update projectile...
-      it->Update();
+	(*it)->Update();
     }
-    
-    std::cout << m_projectiles.size() << std::endl;
-    
+    //std::cout << m_projectiles.size() << std::endl;
 }
 
 void ProjectileManager::DrawAll(Renderer* renderer){
@@ -46,4 +40,8 @@ void ProjectileManager::DrawAll(Renderer* renderer){
 void ProjectileManager::AddProjectile(std::string file_path, int uniqueTag, GameObject::ObjectType shooter, Rect startRectange, Point targetPos, int distance, int speed, int damage){
     m_projectiles.push_back(new Projectile(startRectange, Rect(0,0,startRectange.w,startRectange.h),
 					   GameObject::PROJECTILE, file_path, uniqueTag, shooter, targetPos, distance, speed, damage));
+}
+
+std::vector<GameObject*> ProjectileManager::GetProjectiles() const {
+    return m_projectiles;
 }

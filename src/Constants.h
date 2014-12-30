@@ -6,7 +6,8 @@
 static const int SCREEN_WIDTH = 720;
 static const int SCREEN_HEIGHT = 480;
 
-
+static const std::string HEALTHBAR_RED_FILEPATH = "imgs/healthbar_red.png";
+static const std::string HEALTHBAR_GREEN_FILEPATH = "imgs/healthbar_green.png";
 static const std::string BULLET_FILEPATH = "imgs/bullet.png";
 static const std::string PLAYER_FILEPATH = "imgs/player.png";
 static const std::string BLOCK_FILEPATH = "imgs/block.png";

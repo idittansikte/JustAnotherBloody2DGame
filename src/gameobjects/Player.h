@@ -39,7 +39,10 @@ class Player : public MovingGameObject
   
   bool m_want_jump; 
   bool m_doubleJump_used;
+  Point pistolHole;
+  Point cameraAdjustment;
   
+  int m_uniqueTag{10000};
   // PlayerState* currentState;
   
 };

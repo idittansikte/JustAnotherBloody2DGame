@@ -10,7 +10,6 @@
 #include "Collision.h"
 #include "Constants.h"
 #include "LevelData.h"
-#include "ProjectileManager.h"
 
 
 class Level

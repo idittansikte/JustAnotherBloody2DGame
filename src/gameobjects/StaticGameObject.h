@@ -20,7 +20,7 @@ class StaticGameObject : public GameObject
     
     void Update();
     
-    void Draw(Renderer* renderer);
+    virtual void Draw(Renderer* renderer);
     
     void Clean();
   

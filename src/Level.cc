@@ -7,6 +7,7 @@
 #include "Constants.h"
 #include "Point.h"
 #include "Input.h"
+#include "ProjectileManager.h"
 
 Level::Level():
   m_iWorldWidth(2000),
@@ -79,7 +80,7 @@ void Level::addGameObject(int x, int y, int w, int h, GameObject::ObjectType OTy
     m_vStaticGameObjects.push_back(new Platform(Rect(x,y,w,h), Rect(7,20,79,79), OType, texturePath, m_iUniqueCounter++));
   }
   else if ( OType == GameObject::INVI_PLATFORM ){
-    m_vMiscGameObjects.push_back(new Platform(Rect(x,y,w,h), Rect(x,y,w,h), OType, texturePath, m_iUniqueCounter++));
+    m_vStaticGameObjects.push_back(new Platform(Rect(x,y,w,h), Rect(7,20,79,79), OType, texturePath, m_iUniqueCounter++));
   }
 }
 
@@ -95,11 +96,10 @@ void Level::SaveLevel()
 
 void Level::Update()
 {
+  m_MovingColliesGrid->CleanGrid(); // Make a clean cuz objects are moving and need to be updated..
   
   ProjectileManager::getInstance()->Update();
-  // Update the grid of moving objects
-  m_MovingColliesGrid->update_grid(m_vMovingGameObjects, Point(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), false );
-    
+  
   // Update all static objects
   for (auto it : m_vStaticGameObjects)
     {
@@ -112,6 +112,10 @@ void Level::Update()
       it->Update();
     }
     
+    // Update the grid of moving objects
+  m_MovingColliesGrid->update_grid(m_vMovingGameObjects, Point(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), false );
+  m_MovingColliesGrid->update_grid(ProjectileManager::getInstance()->GetProjectiles(), Point(SCREEN_WIDTH/2, SCREEN_HEIGHT/2), false );
+  
   // Check collision between static and moving objects
   vector<pair<GameObject*, GameObject*>> collies = m_MovingColliesGrid->getColliedPairs(m_StaticColliesGrid);
  
@@ -131,14 +135,14 @@ void Level::Update()
 void Level::Draw(Renderer* renderer)
 {
   
-  ProjectileManager::getInstance()->DrawAll(renderer);
   //Update camera to the current center of SCREEN before any other draws on map...
   renderer->updateCamera(m_Player->getRect(), m_iWorldWidth, m_iWorldHeight);
 
     // Draw all static objects
     for (auto itt : m_vStaticGameObjects)
     {
-      itt->Draw(renderer);
+      if( !itt->isDead() )
+        itt->Draw(renderer);
     }
     
     // Draw all moving objects
@@ -152,6 +156,8 @@ void Level::Draw(Renderer* renderer)
     {
       it->Draw(renderer);
     }
+    
+    ProjectileManager::getInstance()->DrawAll(renderer);
 }
 
 void Level::Clean()

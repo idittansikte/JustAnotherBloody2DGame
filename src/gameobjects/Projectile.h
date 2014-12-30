@@ -35,6 +35,8 @@ class Projectile : public MovingGameObject
   
   void Clean();
   
+  int getDamage(){ return m_damage; }
+  
   private:
     
     GameObject::ObjectType m_shooterType;
@@ -44,6 +46,8 @@ class Projectile : public MovingGameObject
     double angle;
     
     int m_distance;
+    
+    const int m_damage;
    /* 
     std::string m_name{""};
     

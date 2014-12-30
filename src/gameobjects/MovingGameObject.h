@@ -19,7 +19,7 @@ class MovingGameObject : public GameObject
     bool collidedFromRight(GameObject* otherObject);
     bool collidedFromTop(GameObject* otherObject);
     bool collidedFromBottom(GameObject* otherObject);
-    void HandleCollision(GameObject* otherObject);
+    virtual void HandleCollision(GameObject* otherObject);
     
     void PhysicHandler();
     void turnOn_falling();

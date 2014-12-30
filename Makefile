@@ -7,7 +7,7 @@ LDFLAGS = `sdl2-config --libs` \
 INCLUDE = -I"/usr/include/SDL"
 # No need to edit below here
 # All C++ source files of the project
-CXXFILES = $(shell find src -maxdepth 2 -type f -name '*.cc')
+CXXFILES = $(shell find src -maxdepth 3 -type f -name '*.cc')
 CXXOBJECTS = $(CXXFILES:.cc=.o)
 SOURCES = $(CXXFILES)
 OBJECTS = $(CXXOBJECTS)

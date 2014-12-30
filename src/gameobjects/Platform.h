@@ -7,6 +7,8 @@
 #include "StaticGameObject.h"
 #include "../Rect.h"
 #include "../Constants.h"
+#include "Projectile.h"
+#include "gadgets/Bar.h"
 
 class Platform : public StaticGameObject
 {
@@ -14,7 +16,10 @@ class Platform : public StaticGameObject
     
   Platform( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID )
     : StaticGameObject(r, c, otype, texturePath, uniqueID)
-  {}
+  {
+    m_max_health = 400;
+    m_health = m_max_health;
+  }
   
   void Init();
   
@@ -28,7 +33,11 @@ class Platform : public StaticGameObject
   
   private:
     
-    int speed{};
+    int m_max_health;
+    
+    int m_health;
+    
+    Bar m_bar;
 
 };
 
