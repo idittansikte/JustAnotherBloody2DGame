@@ -21,6 +21,7 @@ class Player : public MovingGameObject
   void Update();
   
   void Draw(Renderer* renderer);
+  void renderPistol(Renderer* renderer);
   
   void Clean();
   
@@ -28,6 +29,7 @@ class Player : public MovingGameObject
   void movement_right();
   void movement_up();
   void movement_down();
+  void movement_shoot();
   
   void JumpHandler();
   

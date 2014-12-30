@@ -167,30 +167,35 @@ void Renderer::endScene()
 	SDL_Delay(1000/60);
 }
 
-void Renderer::drawTexture(Rect rect, std::string texturePath, bool onMap ,Rect clip, bool flip)
+void Renderer::drawTexture(Rect rect, std::string texturePath, bool onMap ,Rect clip, bool flipHorisontal, bool flipVertical, Point centerPoint, double angle)
 {
 	
   SDL_Rect offset;
   SDL_Rect Clip;
+  SDL_Point center = {centerPoint.x, centerPoint.y};
   SDL_RendererFlip SDLflip;
+  
   if (onMap)
     offset = {rect.x-camera.x, rect.y-camera.y, rect.w, rect.h};
   else
     offset = {rect.x, rect.y, rect.w, rect.h};
     
-  if (flip == false)
-    SDLflip = SDL_FLIP_NONE;
-  else
-     SDLflip = SDL_FLIP_HORIZONTAL; 
+    if (flipHorisontal == false && flipVertical == false )
+	SDLflip = SDL_FLIP_NONE;
+    else if (flipHorisontal == true && flipVertical == false)
+	SDLflip = SDL_FLIP_VERTICAL; 
+    else if (flipHorisontal == false && flipVertical == true)
+	SDLflip = SDL_FLIP_HORIZONTAL;
 
-  if( clip.w != 0 && clip.w != 0 )
-  {
-    Clip = {clip.x, clip.y, clip.w, clip.h};
-	SDL_RenderCopyEx( mRenderer, getTexture(texturePath), &Clip, &offset, 0, NULL, SDLflip );
-  }
-  else{
-    SDL_RenderCopyEx( mRenderer, getTexture(texturePath), NULL, &offset, 0, NULL, SDLflip );
-  }
+    if( clip.w != 0 && clip.h != 0 )
+    {
+	Clip = {clip.x, clip.y, clip.w, clip.h};
+	SDL_RenderCopyEx( mRenderer, getTexture(texturePath), &Clip, &offset, angle, &center, SDLflip );
+    }
+    else{
+	SDL_RenderCopyEx( mRenderer, getTexture(texturePath), NULL, &offset, angle, &center, SDLflip );
+    }	
+
 }
 
 
@@ -259,7 +264,8 @@ void Renderer::updateCamera(Rect screenCenter, int levelWidth, int levelHeight)
 		
 }
 
-Rect Renderer::getCameraAdjustment()
+Point Renderer::getCameraAdjustment()
 {
-	return Rect(camera.x, camera.y);
+	return Point(camera.x, camera.y);
 }
+

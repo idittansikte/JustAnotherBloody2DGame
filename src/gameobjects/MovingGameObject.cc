@@ -73,7 +73,7 @@ void MovingGameObject::HandleCollision(GameObject* otherObject)
   }
 }
 
-void MovingGameObject::apply_gravitaion(){
+void MovingGameObject::PhysicHandler(){
   
     if( vy < vy_max ){ // Max fallspeed
       vy += ay;

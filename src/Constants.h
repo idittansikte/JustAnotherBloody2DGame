@@ -6,6 +6,8 @@
 static const int SCREEN_WIDTH = 720;
 static const int SCREEN_HEIGHT = 480;
 
+
+static const std::string BULLET_FILEPATH = "imgs/bullet.png";
 static const std::string PLAYER_FILEPATH = "imgs/player.png";
 static const std::string BLOCK_FILEPATH = "imgs/block.png";
 static const std::string BLOCK3DBack_FILEPATH = "imgs/block3d_back.png";

@@ -21,7 +21,7 @@ class MovingGameObject : public GameObject
     bool collidedFromBottom(GameObject* otherObject);
     void HandleCollision(GameObject* otherObject);
     
-    void apply_gravitaion();
+    void PhysicHandler();
     void turnOn_falling();
     void turnOff_falling();
   

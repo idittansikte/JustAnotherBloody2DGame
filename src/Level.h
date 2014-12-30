@@ -10,6 +10,7 @@
 #include "Collision.h"
 #include "Constants.h"
 #include "LevelData.h"
+#include "ProjectileManager.h"
 
 
 class Level
@@ -35,14 +36,19 @@ class Level
   
   private:
     int m_iWorldWidth;
-    int m_iWorldHeight; 
+    int m_iWorldHeight;
+    
     LevelData m_LevelData;
+    
     std::vector<GameObject*> m_vMovingGameObjects;
     std::vector<GameObject*> m_vStaticGameObjects;
     std::vector<GameObject*> m_vMiscGameObjects;
+    
     Collision* m_StaticColliesGrid;
     Collision* m_MovingColliesGrid;
-    Player* m_Player;
-    int m_iUniqueCounter{};
     
+    Player* m_Player;
+    
+    int m_iUniqueCounter{};
+     
 };

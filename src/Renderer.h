@@ -9,6 +9,7 @@
 #include <map>
 
 #include "Rect.h"
+#include "Point.h"
 #include "Constants.h"
 
 class Renderer
@@ -26,13 +27,14 @@ class Renderer
     void beginScene();
     void endScene();
     
-    void drawTexture(Rect rect, std::string texturePath, bool onMap = false , Rect clip = Rect(), bool flip = false);
+    void drawTexture(Rect rect, std::string texturePath, bool onMap = false , Rect clip = Rect(),
+                     bool flipHorisontal = false, bool flipVertical= false, Point centerPoint = Point(), double angle = 0);
     
     SDL_Texture* loadTexture(std::string filename);
     SDL_Texture* loadTexture(std::string text, unsigned int color1, unsigned int color2, unsigned int color3);
     
     void updateCamera(Rect screenCenter, int, int);
-    Rect getCameraAdjustment();
+    Point getCameraAdjustment();
     
   private:
     SDL_Window* mWindow;

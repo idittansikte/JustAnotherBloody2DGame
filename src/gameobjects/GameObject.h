@@ -11,7 +11,7 @@
 class GameObject
 {
   public:
-    enum ObjectType {PLAYER, PLATFORM, INVI_PLATFORM, ENEMY};
+    enum ObjectType {PLAYER, PLATFORM, INVI_PLATFORM, ENEMY, PROJECTILE};
     
     virtual void Init();
     

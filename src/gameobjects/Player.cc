@@ -1,6 +1,9 @@
 #include "Player.h"
+#include "../Input.h"
+#include "../ProjectileManager.h"
 
 #include <iostream>
+#include <math.h>
 
 Player::Player( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID ) :
   MovingGameObject(r, c, otype, texturePath, uniqueID),
@@ -22,18 +25,21 @@ void Player::HandleCollision(GameObject* otherObject)
 
 void Player::Update()
 {
-  apply_gravitaion();
+  
+  
+  PhysicHandler();
   
   JumpHandler();
   
-  CleanupFrame();
-  
   MovingGameObject::Update(); // Applying velocity
+  
+  CleanupFrame();
 }
 
 void Player::Draw(Renderer* renderer)
 {
   GameObject::Draw(renderer);
+  renderPistol(renderer);
 }
 
 void Player::Clean()
@@ -60,6 +66,13 @@ void Player::movement_down(){
   // apply_velocity_y(m_current_walking_speed);
 }
 
+void Player::movement_shoot(){
+  Rect p_pos = getRect();
+  ProjectileManager::getInstance()->AddProjectile(BULLET_FILEPATH, 0, GameObject::PLAYER, Rect(p_pos.x,p_pos.y,40,40),
+                                  Point(Input::getInstance()->get_mouse_x()+getCenterPos().x - (SCREEN_WIDTH / 2),
+					Input::getInstance()->get_mouse_y()+getCenterPos().y - (SCREEN_HEIGHT / 2) ), 250, 3, 100);
+}
+
 void Player::JumpHandler(){
   
   if( contactTop ){
@@ -80,7 +93,35 @@ void Player::JumpHandler(){
   
 }
 
-
+void Player::renderPistol(Renderer* renderer){
+  Point center = getCenterPos(); //center of player
+  center.x -= 20;
+  center.y -= 20;
+  Point centerSize(20, 20);
+  int radius = 50; // pixels
+  
+  Point adjustment = renderer->getCameraAdjustment();
+  
+  int mouseX = Input::getInstance()->get_mouse_x() + adjustment.x;
+  int mouseY = Input::getInstance()->get_mouse_y() + adjustment.y;
+  
+  int deltaX, deltaY;
+  
+  deltaX = mouseX - center.x;
+  deltaY = mouseY - center.y;
+  
+  double angle = ( atan2(deltaY,deltaX) * 180 ) / 3.14;
+  
+  // Set pistol on circel around player...
+  int posx = center.x + radius * cos(angle * 3.14/180);
+  int posy = center.y + radius * sin(angle * 3.14/180);
+  
+  //Flip pistol if it is upsidedown
+  if (angle < 90 && angle > -90)
+    renderer->drawTexture( Rect(posx,posy,40,40), "imgs/pistol.png", true, Rect(0,0,50,50), false, false, centerSize, angle );
+  else
+    renderer->drawTexture( Rect(posx,posy,40,40), "imgs/pistol.png", true, Rect(0,0,50,50), true, false, centerSize, angle );
+}
 
 
 

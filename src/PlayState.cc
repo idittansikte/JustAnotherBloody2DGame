@@ -54,6 +54,8 @@ void PlayState::HandleEvents(Game* game)
   if(Input::getInstance()->is_key_pressed(KEY_DOWN))
       m_Level->getPlayer()->movement_down();
       
+  if(Input::getInstance()->is_mouse_down(MOUSE_LEFT))
+      m_Level->getPlayer()->movement_shoot();
 }
 void PlayState::Update(Game* game)
 {
