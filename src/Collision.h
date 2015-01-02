@@ -19,7 +19,7 @@ public:
   
   void CleanGrid();
   
-  void update_grid(vector<GameObject*> ObjectList, Point center, bool update_only_visable = true);
+  void AddToGrid(multimap<int, GameObject*> ObjectList, Point center, Rect screenSize, bool update_only_visable = true);
   
   vector<pair<GameObject*, GameObject*>> getColliedPairs(Collision* otherList = nullptr);
   
@@ -33,6 +33,9 @@ public:
 private:
   
   bool m_isGrid;
+  
+  vector<pair<GameObject*, GameObject*>> cColliedPairs; // Vector wich we will return
+  map<std::string, bool> m_mChecked; //To know wich objects we have checked..
   
   int m_CollisionGridSize{};
   int WORLD_WIDTH;

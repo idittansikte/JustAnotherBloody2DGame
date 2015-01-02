@@ -3,11 +3,11 @@ EXE = game
 CFLAGS = -g `sdl2-config --cflags`
 CXXFLAGS = -g `sdl2-config --cflags` -std=c++11
 LDFLAGS = `sdl2-config --libs` \
--lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm
+-lSDL2_image -lSDL2_ttf -lSDL2_mixer -lm -llua5.2 
 INCLUDE = -I"/usr/include/SDL"
 # No need to edit below here
 # All C++ source files of the project
-CXXFILES = $(shell find src -maxdepth 3 -type f -name '*.cc')
+CXXFILES = $(shell find src -maxdepth 4 -type f -name '*.cc')
 CXXOBJECTS = $(CXXFILES:.cc=.o)
 SOURCES = $(CXXFILES)
 OBJECTS = $(CXXOBJECTS)

@@ -14,16 +14,21 @@ ProjectileManager::~ProjectileManager()
 
 
 void ProjectileManager::CleanupDead(){
-    m_projectiles.erase(std::remove_if(m_projectiles.begin(), m_projectiles.end(), [](GameObject* p) { return p->isDead() == true; }), m_projectiles.end());
+    //m_projectiles.erase(std::remove_if(m_projectiles.begin(), m_projectiles.end(), []( std::pair<int, GameObject*> p ) { return p.second->isDead() == true; }), m_projectiles.end());
 }
 
 void ProjectileManager::Update(){
     
-    CleanupDead();
+    //CleanupDead();
     
-    for (std::vector<GameObject*>::iterator it = m_projectiles.begin(); it != m_projectiles.end(); ++it){
+    for (std::multimap<int, GameObject*>::iterator it = m_projectiles.begin(); it != m_projectiles.end(); ++it){
+	
+	// Remove dead ones
+	if( (*it).second->isDead() )
+	    m_projectiles.erase(it);
+	    
 	// Update projectile...
-	(*it)->Update();
+	(*it).second->Update();
     }
     //std::cout << m_projectiles.size() << std::endl;
 }
@@ -32,16 +37,22 @@ void ProjectileManager::DrawAll(Renderer* renderer){
     
     for (auto it : m_projectiles)
     {
-      it->Draw(renderer);
+      it.second->Draw(renderer);
     }
     
 }
 
 void ProjectileManager::AddProjectile(std::string file_path, int uniqueTag, GameObject::ObjectType shooter, Rect startRectange, Point targetPos, int distance, int speed, int damage){
-    m_projectiles.push_back(new Projectile(startRectange, Rect(0,0,startRectange.w,startRectange.h),
-					   GameObject::PROJECTILE, file_path, uniqueTag, shooter, targetPos, distance, speed, damage));
+    m_projectiles.insert( std::make_pair( 4, new Projectile(startRectange, Rect(0,0,startRectange.w,startRectange.h),
+					   GameObject::PROJECTILE, file_path, uniqueTag, shooter, targetPos, distance, speed, damage, true, 0) ) );
 }
 
-std::vector<GameObject*> ProjectileManager::GetProjectiles() const {
+void ProjectileManager::AddProjectile(std::string file_path, int uniqueTag, GameObject::ObjectType shooter, Rect startRectange, float angle, int distance, int speed, int damage){
+    m_projectiles.insert( std::make_pair( 4, new Projectile(startRectange, Rect(0,0,startRectange.w,startRectange.h),
+					   GameObject::PROJECTILE, file_path, uniqueTag, shooter, angle, distance, speed, damage, true, 0 ) ) );
+}
+
+
+std::multimap<int, GameObject*> ProjectileManager::GetProjectiles() const {
     return m_projectiles;
 }

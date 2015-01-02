@@ -41,6 +41,6 @@ void PauseState::Update(Game* game)
 
 void PauseState::Draw(Game* game, Renderer* renderer)
 {
-  renderer->drawTexture(Rect(0,0,SCREEN_WIDTH, SCREEN_HEIGHT), BACKGROUND_PAUSEMENU_FILEPATH, false);
+  renderer->drawTexture(Rect(0,0,renderer->getWindowSize().w, renderer->getWindowSize().h), BACKGROUND_PAUSEMENU_FILEPATH, false);
   //SDL_Flip(game->getScreen());
 }

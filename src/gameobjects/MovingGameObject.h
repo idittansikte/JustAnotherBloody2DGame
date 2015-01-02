@@ -6,7 +6,10 @@
 #include "GameObject.h"
 #include "../Rect.h"
 #include "../Constants.h"
-#include "../Renderer.h"
+
+class Renderer;
+
+enum Direction{LEFT, RIGHT};
 
 class MovingGameObject : public GameObject
 {
@@ -36,9 +39,11 @@ class MovingGameObject : public GameObject
     void apply_velocity_y(float y);
     
   protected:
-    MovingGameObject( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID)
-      : GameObject(r, c, otype, texturePath, uniqueID), vx(0), vy(0), ax(0.5), ay(0.5)
+    MovingGameObject( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID, bool immune, int health, int damage)
+      : GameObject(r, c, otype, texturePath, uniqueID, immune, health, damage), vx(0), vy(0), ax(1.0), ay(0.5)
     {}
+    
+    virtual GameObject* Clone() = 0;
     
     //For collision detection
     bool contactTop{false};
@@ -52,9 +57,19 @@ class MovingGameObject : public GameObject
     float ax; // acceleration X
     float ay; // acceleration Y
     const float vy_max{15};
-    const float vx_max{6};
+    const float ax_normal{0.5};
+    
+    Direction m_current_direction{RIGHT};
+    
+    float m_ground_friktion{};
+    int m_ground_jumpacceleration{};
+    
+    void SetDirection(Direction dir);
+    void ChangeDirection();
+    Direction GetDirection();
     
   private:
+  
   
   Point m_previous_position; //
   Point m_velocity;

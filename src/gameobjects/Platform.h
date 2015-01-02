@@ -3,23 +3,24 @@
 
 #include <string>
 
-#include "../Renderer.h"
 #include "StaticGameObject.h"
 #include "../Rect.h"
+#include "../Point.h"
 #include "../Constants.h"
 #include "Projectile.h"
-#include "gadgets/Bar.h"
+
+class Renderer;
+class Bar;
+
 
 class Platform : public StaticGameObject
 {
   public:
-    
-  Platform( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID )
-    : StaticGameObject(r, c, otype, texturePath, uniqueID)
-  {
-    m_max_health = 400;
-    m_health = m_max_health;
-  }
+ 
+  enum State{NORMAL, DIES};
+  
+  Platform( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID, bool immune, int health, int damage, int damageTicks,
+	   int friktion, int m_jumpAcceleration );
   
   void Init();
   
@@ -31,14 +32,22 @@ class Platform : public StaticGameObject
   
   void Clean();
   
+  GameObject* Clone();
+  
+  int getFriktion(){ return m_friktion; }
+  int getJumpAcceleration(){ return m_jumpAcceleration; }
+  
   private:
     
-    int m_max_health;
+    State currentState{NORMAL};
     
-    int m_health;
-    
-    Bar m_bar;
+    const int m_damageTicks;
+    const int m_friktion;
+    int m_jumpAcceleration;
 
+    bool m_deadAnimationActive{false};
+    Point currentAniamtionClip;
+    int m_ani_delay;
 };
 
 #endif

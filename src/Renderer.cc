@@ -43,7 +43,7 @@ bool Renderer::Init()
     {
 
 	 // create window
-        mWindow = SDL_CreateWindow("Not speced" , SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 720, 480, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
+        mWindow = SDL_CreateWindow("0_0" , SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 900, 600, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE );
 	
 	
 	SDL_Surface *surface;     // Declare an SDL_Surface to be filled in with pixel data from an image file
@@ -183,9 +183,9 @@ void Renderer::drawTexture(Rect rect, std::string texturePath, bool onMap ,Rect 
     if (flipHorisontal == false && flipVertical == false )
 	SDLflip = SDL_FLIP_NONE;
     else if (flipHorisontal == true && flipVertical == false)
-	SDLflip = SDL_FLIP_VERTICAL; 
+	SDLflip = SDL_FLIP_HORIZONTAL; 
     else if (flipHorisontal == false && flipVertical == true)
-	SDLflip = SDL_FLIP_HORIZONTAL;
+	SDLflip = SDL_FLIP_VERTICAL;
 
     if( clip.w != 0 && clip.h != 0 )
     {
@@ -249,8 +249,8 @@ SDL_Texture* Renderer::loadTexture(string text, unsigned int color1, unsigned in
 void Renderer::updateCamera(Rect screenCenter, int levelWidth, int levelHeight)
 {
 	//Center the camera over the player
-	camera.x = ( screenCenter.x + screenCenter.w / 2 ) - SCREEN_WIDTH / 2;
-	camera.y = ( screenCenter.y + screenCenter.h / 2 ) - SCREEN_HEIGHT / 2;
+	camera.x = ( screenCenter.x + screenCenter.w / 2 ) - getWindowSize().w / 2;
+	camera.y = ( screenCenter.y + screenCenter.h / 2 ) - getWindowSize().h / 2;
 	//std::cout << "camera.x: " << camera.x << " camera.y: " << camera.y << std::endl; 
 	//Keep the camera in bounds
 	if( camera.x < 0 )
@@ -269,3 +269,11 @@ Point Renderer::getCameraAdjustment()
 	return Point(camera.x, camera.y);
 }
 
+
+Rect Renderer::getWindowSize(){
+    int w;
+    int h;
+    SDL_GetWindowSize(mWindow, &w, &h);
+    
+    return Rect(0,0,w,h);
+}

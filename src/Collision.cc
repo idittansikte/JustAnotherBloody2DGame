@@ -13,9 +13,11 @@ Collision::Collision(int ww, int wh):
 
 void Collision::CleanGrid(){
   grid.clear();
+  cColliedPairs.clear();
+  m_mChecked.clear();
 }
 
-void Collision::update_grid( vector<GameObject*> ObjectList, Point center, bool update_only_visable )
+void Collision::AddToGrid( multimap<int, GameObject*> ObjectList, Point center, Rect screenSize, bool update_only_visable )
 {
   //std::cout << "Updating collision grid... " << std::endl;
   allocatedCells = 0;
@@ -32,16 +34,17 @@ void Collision::update_grid( vector<GameObject*> ObjectList, Point center, bool 
   grid.resize(gridWidth);
   
   //For all objects in list...
-  for( unsigned int i{}; i < ObjectList.size(); ++i)
+  for (std::multimap<int,GameObject*>::iterator itObject = ObjectList.begin(); itObject!=ObjectList.end(); ++itObject)
+  //for( unsigned int i{}; i < ObjectList.size(); ++i)
     {
-	GameObject* cObject = ObjectList[i];
+	GameObject* cObject = itObject->second;
     
       if(cObject->isDead())
         continue;
       
       // Check if Object is outside of SCREEN_SIZE size, dont update... (because we dont want any uneeded checked that drain power from our system)
       if (update_only_visable){
-	if ( !cObject->is_in_screen_range(center) ){
+	if ( !cObject->is_in_screen_range(center, screenSize) ){
           continue;
 	}
       }
@@ -76,8 +79,7 @@ vector<pair<GameObject*, GameObject*>> Collision::getColliedPairs(Collision* oth
 {
   if (otherList == nullptr)
     otherList = this;
-  vector<pair<GameObject*, GameObject*>> cColliedPairs; // Vector wich we will return
-  map<std::string, bool> m_mChecked; //To know wich objects we have checked..
+
   //For every column in this grid
   for( unsigned int i{}; i < grid.size(); ++i)
     {
@@ -113,8 +115,8 @@ vector<pair<GameObject*, GameObject*>> Collision::getColliedPairs(Collision* oth
                   if(GameObjectB->isDead())
                     continue;
             
-		  std::string hashA = to_string(GameObjectA->getUniqueID()) + ':' + to_string(GameObjectB->getUniqueID());
-		  std::string hashB = to_string(GameObjectB->getUniqueID()) + ':' + to_string(GameObjectA->getUniqueID());
+		  std::string hashA = to_string(GameObjectA->getUniqueTag()) + ':' + to_string(GameObjectB->getUniqueTag());
+		  std::string hashB = to_string(GameObjectB->getUniqueTag()) + ':' + to_string(GameObjectA->getUniqueTag());
 
 		  if( !m_mChecked[hashA] && !m_mChecked[hashB] )
 		    {
@@ -169,12 +171,12 @@ void Collision::aabbWorldIntersection(GameObject* obj)
   Rect a = obj->getCollisionRect();
 
   if ( a.x < 0 )
-    obj->updatePos_x(0);
+    obj->setDead();
   if ( a.y < 0 )
-    obj->updatePos_y(0);
+    obj->setDead();
     
-  if (a.x + a.w > WORLD_WIDTH-500)
-    obj->updatePos_x(WORLD_WIDTH-a.w-500);
-  if (a.y + a.h > WORLD_HEIGHT-500)
-    obj->updatePos_y(WORLD_HEIGHT-a.h-500);
+  if (a.x + a.w > WORLD_WIDTH-m_CollisionGridSize)
+    obj->setDead();
+  if (a.y + a.h > WORLD_HEIGHT-m_CollisionGridSize)
+    obj->setDead();
 }

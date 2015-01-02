@@ -7,6 +7,9 @@
 #include "../Rect.h"
 #include "../Constants.h"
 #include "../Point.h"
+#include "../Animation.h"
+#include "gadgets/Bar.h"
+
 
 class GameObject
 {
@@ -15,7 +18,7 @@ class GameObject
     
     virtual void Init();
     
-    virtual void HandleCollision(GameObject* otherObject) = 0;
+    virtual void HandleCollision(GameObject* otherObject);
     
     virtual void Update();
     
@@ -36,19 +39,36 @@ class GameObject
     //Objects texture and types
     std::string getTexturePath() { return m_sTexturePath; }
     ObjectType getObjectType() { return m_eObjectType; }
-    int getUniqueID(){ return m_iUniqueID; }
+    int getUniqueTag(){ return m_iUniqueID; }
+    void changeUniqueTag(int tag){ m_iUniqueID = tag; }
     
     // Check if object should for example, be rendered or updated...
-    bool is_in_screen_range(Point screenCenter);
+    bool is_in_screen_range(Point screenCenter, Rect screenSize);
     
     // Object life handling
     void setDead();
     void setAlive();
     bool isDead();
     
-  protected:
+    void AddAnimation(std::string animationName, Animation* newAnimation);
+    Animation* GetAnimation(std::string animationName);
+    void CloneAnimations();
     
-    GameObject( Rect r, Rect c, ObjectType oType, std::string texturePath, int uniqueID);
+    int getMaxHealth(){ return m_max_health;}	
+    int getCurrentHealth(){ return m_health;}
+    
+    Bar* m_bar;
+
+  protected:
+    GameObject( Rect r, Rect c, ObjectType oType, std::string texturePath, int uniqueID, bool immune, int health, int damage);
+    
+    virtual GameObject* Clone() = 0;
+    
+    
+    const int m_max_health;
+    int m_health;
+    bool m_immune;
+    const int m_damage;
     
   private:
     
@@ -62,7 +82,9 @@ class GameObject
     bool m_dead;
     
     bool m_bChanged;
-    const int m_iUniqueID;
+    int m_iUniqueID;
+    
+    std::map<std::string, Animation*> m_animations;
 
 };
 

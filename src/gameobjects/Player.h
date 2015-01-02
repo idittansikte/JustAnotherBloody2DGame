@@ -3,16 +3,20 @@
 
 #include <string>
 
-#include "../Renderer.h"
+//#include "../Renderer.h"
+
 #include "MovingGameObject.h"
 #include "../Rect.h"
-#include "../Constants.h"
+#include "../Point.h"
+
+class Platform;
+class Renderer;
 
 class Player : public MovingGameObject
 {
   public:
     
-  Player( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID );
+  Player( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID , bool immune, int health, int damage);
   
   void Init();
   
@@ -33,6 +37,12 @@ class Player : public MovingGameObject
   
   void JumpHandler();
   
+  GameObject* Clone() { return new Player(*this); }
+  
+  void HandleAcceleration(GameObject* otherObject);
+  
+  Point getStartPoint() const { return m_start_pos; }
+  
   private:
     
   const float m_jump_start_velocity;
@@ -41,6 +51,10 @@ class Player : public MovingGameObject
   bool m_doubleJump_used;
   Point pistolHole;
   Point cameraAdjustment;
+  
+  const Point m_start_pos;
+  
+  float m_angle;
   
   int m_uniqueTag{10000};
   // PlayerState* currentState;

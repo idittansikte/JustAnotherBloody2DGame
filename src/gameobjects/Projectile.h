@@ -22,7 +22,24 @@ class Projectile : public MovingGameObject
 	Point targetPos,
 	int distance,
 	int speed,
-	int damage
+	int damage,
+	int immune,
+	int health
+	);
+  
+  Projectile(
+	Rect r,
+	Rect c,
+	GameObject::ObjectType otype,
+	std::string texturePath,
+	int uniqueID,
+	GameObject::ObjectType shooterType,
+	float angle,
+	int distance,
+	int speed,
+	int damage,
+	int immune,
+	int health
 	);
   
   void Init();
@@ -37,17 +54,17 @@ class Projectile : public MovingGameObject
   
   int getDamage(){ return m_damage; }
   
+  GameObject* Clone() { return new Projectile(*this); }
+  
   private:
     
     GameObject::ObjectType m_shooterType;
     
     Point m_startPos;
     
-    double angle;
+    float m_angle;
     
     int m_distance;
-    
-    const int m_damage;
    /* 
     std::string m_name{""};
     

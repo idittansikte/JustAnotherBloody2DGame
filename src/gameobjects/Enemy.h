@@ -3,10 +3,8 @@
 
 #include <string>
 
-#include "../Renderer.h"
 #include "MovingGameObject.h"
-#include "../Rect.h"
-#include "../Constants.h"
+#include "../Point.h"
 
 class Enemy : public MovingGameObject
 {
@@ -17,10 +15,11 @@ class Enemy : public MovingGameObject
 	Rect c,
 	GameObject::ObjectType otype,
 	std::string texturePath,
-	int uniqueID
-	):
-    MovingGameObject(r, c, otype, texturePath, uniqueID)
-  {}
+	int uniqueID,
+	bool immune,
+	int health,
+	int damage
+	);
   
   void Init();
   
@@ -32,7 +31,11 @@ class Enemy : public MovingGameObject
   
   void Clean();
   
+  GameObject* Clone() { return new Enemy(*this); }
+  
   private:
+    
+    const Point m_start_position;
    /* 
     std::string m_name{""};
     

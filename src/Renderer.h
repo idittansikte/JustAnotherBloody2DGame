@@ -36,6 +36,8 @@ class Renderer
     void updateCamera(Rect screenCenter, int, int);
     Point getCameraAdjustment();
     
+    Rect getWindowSize();
+    
   private:
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;

@@ -1,11 +1,29 @@
 #include "Bar.h"
 
+#include "../GameObject.h"
 
-void Bar::showHealthBar(Renderer* renderer, Rect barRect, int max, int current){
-    
-    float greenPercentage = ((float)current / (float)max) * barRect.w;
-    
-    renderer->drawTexture( barRect, HEALTHBAR_RED_FILEPATH, true);
-    renderer->drawTexture( Rect(barRect.x, barRect.y, greenPercentage, barRect.h), HEALTHBAR_GREEN_FILEPATH, true);
+//#include "../../Constants.h"
 
+void Bar::setBarBox(Rect barbox){
+    
+    m_barBox = barbox;
+}
+
+void Bar::showBar(float uptime){
+    m_timer.start();
+    m_uptime=uptime;
+}
+
+void Bar::drawHealthBar(Renderer* renderer, GameObject* lhs){
+    
+    Rect r = lhs->getRect();
+    
+    if(m_timer.getSecondsFromStart() < m_uptime){
+    
+    float greenPercentage = ((float)lhs->getCurrentHealth() / (float)lhs->getMaxHealth()) * m_barBox.w;
+    
+    renderer->drawTexture( Rect(r.x + m_barBox.x, r.y + m_barBox.y, m_barBox.w, m_barBox.h), HEALTHBAR_RED_FILEPATH, true);
+    renderer->drawTexture( Rect(r.x + m_barBox.x, r.y + m_barBox.y, greenPercentage, m_barBox.h), HEALTHBAR_GREEN_FILEPATH, true);
+
+    }
 }

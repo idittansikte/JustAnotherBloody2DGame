@@ -42,5 +42,5 @@ void MenuState::Update(Game* game)
 
 void MenuState::Draw(Game* game, Renderer* renderer)
 {
-  renderer->drawTexture( Rect(0,0,SCREEN_WIDTH, SCREEN_HEIGHT), MENU_BACKGROUND_FILEPATH, false);
+  renderer->drawTexture( Rect(0,0,renderer->getWindowSize().w, renderer->getWindowSize().h), MENU_BACKGROUND_FILEPATH, false);
 }

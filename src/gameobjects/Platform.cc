@@ -1,7 +1,17 @@
 #include "Platform.h"
-#include "GameObject.h"
 #include <iostream>
 #include <cmath>
+
+
+Platform::Platform( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID,
+		   bool immune, int health, int damage, int damageTicks, int friktion, int jumpAcceleration)
+  : StaticGameObject(r, c, otype, texturePath, uniqueID, immune, health, damage), m_damageTicks(damageTicks), m_friktion(friktion),
+  m_jumpAcceleration(jumpAcceleration)
+
+{
+    m_bar->setBarBox(Rect( 10, 40, 60, 4));
+}
+
 
 void Platform::Init()
 {
@@ -10,31 +20,41 @@ void Platform::Init()
 
 void Platform::HandleCollision(GameObject* otherObject)
 {
-  if ( otherObject->getObjectType() == GameObject::PROJECTILE ){
-    Projectile* p = dynamic_cast<Projectile*>(otherObject);
-    
-    m_health -= p->getDamage();
-  }
+  StaticGameObject::HandleCollision(otherObject);
+
 }
 
 void Platform::Update()
 {
-  if (m_health <= 0)
-    setDead();
+  
+  StaticGameObject::Update();
+  
 }
 
 void Platform::Draw(Renderer* renderer)
 {
-  GameObject::Draw(renderer);
   
-  Rect r = this->getRect();
-  Rect healthbar(r.x+10, r.y+40, r.w-40, 10);
-  if ( this->getObjectType() == GameObject::INVI_PLATFORM ){
-    m_bar.showHealthBar(renderer, healthbar, m_max_health, m_health);
+  if(!isDead()){
+    renderer->drawTexture( getRect(), getTexturePath(), true);
   }
+  else{
+    GetAnimation("DEATH")->DrawCurrentFrame(renderer, getRect());
+    return;
+  }
+    
+    
+  StaticGameObject::Draw(renderer);
+  
 }
 
 void Platform::Clean()
 {
   
+}
+
+GameObject* Platform::Clone(){
+  GameObject* newPlatform = new Platform(*this);
+  newPlatform->CloneAnimations();
+  newPlatform->m_bar = this->m_bar->Clone();
+  return newPlatform;
 }

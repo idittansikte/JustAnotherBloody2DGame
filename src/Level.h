@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 
+#include "gameobjects/GameObjectManager.h"
 #include "gameobjects/GameObject.h"
 #include "Renderer.h"
 #include "gameobjects/Player.h"
@@ -37,17 +38,19 @@ class Level
     int m_iWorldWidth;
     int m_iWorldHeight;
     
+    Rect m_screenSize;
+    
     LevelData m_LevelData;
     
-    std::vector<GameObject*> m_vMovingGameObjects;
-    std::vector<GameObject*> m_vStaticGameObjects;
-    std::vector<GameObject*> m_vMiscGameObjects;
+    std::multimap<int, GameObject*> m_vMovingGameObjects;
+    std::multimap<int, GameObject*> m_vStaticGameObjects;
+    std::multimap<int, GameObject*> m_vMiscGameObjects;
     
     Collision* m_StaticColliesGrid;
     Collision* m_MovingColliesGrid;
     
     Player* m_Player;
     
-    int m_iUniqueCounter{};
+    int uniqueTag{};
      
 };

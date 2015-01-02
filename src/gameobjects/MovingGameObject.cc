@@ -41,11 +41,12 @@ bool MovingGameObject::collidedFromBottom(GameObject* otherObject){
 
 void MovingGameObject::HandleCollision(GameObject* otherObject)
 {
+  GameObject::HandleCollision(otherObject);
   
   Rect A = this->getCollisionRect();
   Rect B = otherObject->getCollisionRect();
   
-  if ( otherObject->getObjectType() == GameObject::PLATFORM ){
+  //if ( otherObject->getObjectType() == GameObject::PLATFORM ){
     
     if ( collidedFromTop(otherObject) ){ //Collied  top
       m_previous_position.y = B.y-A.h;
@@ -70,7 +71,7 @@ void MovingGameObject::HandleCollision(GameObject* otherObject)
       updatePos_x(m_previous_position.x);
       contactLeft = true;
     }
-  }
+  //}
 }
 
 void MovingGameObject::PhysicHandler(){
@@ -84,11 +85,19 @@ void MovingGameObject::PhysicHandler(){
     }
     
     //Friction
-    if(vx < 0)
-      vx += 0.3;
-    if(vx > 0) 
-      vx -= 0.3;
+    if( m_current_direction == LEFT ){
+      if(vx < 0)
+	vx += m_ground_friktion;
+      else
+	vx = 0;
+    }
     
+    if( m_current_direction == RIGHT ){
+      if (vx > 0)
+	vx -= m_ground_friktion;
+      else
+	vx = 0;
+    }
 }
 
 void MovingGameObject::turnOn_falling(){
@@ -110,11 +119,13 @@ void MovingGameObject::Update()
 {
   apply_velocity_x(vx);
   apply_velocity_y(vy);
+  
+  GameObject::Update();
 }
 
 void MovingGameObject::Draw(Renderer* renderer)
 {
-  
+    GameObject::Draw(renderer);
 }
 
 void MovingGameObject::Clean()
@@ -137,3 +148,19 @@ void MovingGameObject::apply_velocity_y(float y_){
   this->m_previous_position.y = A.y;
   updatePos_y( A.y + y);
 }
+
+void MovingGameObject::SetDirection(Direction dir){
+  m_current_direction = dir;
+}
+
+void MovingGameObject::ChangeDirection(){
+  if(m_current_direction == RIGHT)
+    m_current_direction = LEFT;
+  else
+    m_current_direction = RIGHT;
+}
+
+Direction MovingGameObject::GetDirection(){
+  return m_current_direction;
+}
+

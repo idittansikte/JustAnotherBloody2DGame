@@ -19,8 +19,8 @@ public:
     
     
     void AddProjectile(std::string file_path, int uniqueTag, GameObject::ObjectType shooter, Rect startRectange, Point targetPos, int speed, int distance, int damage);
-    
-    std::vector<GameObject*> GetProjectiles() const;
+    void AddProjectile(std::string file_path, int uniqueTag, GameObject::ObjectType shooter, Rect startRectange, float angle, int speed, int distance, int damage);
+    std::multimap<int, GameObject*> GetProjectiles() const;
 	
     static ProjectileManager* getInstance(){
 	if( !m_ProjectileManager )
@@ -29,7 +29,7 @@ public:
 	return m_ProjectileManager;
     }
 private:
-    std::vector<GameObject*> m_projectiles;
+    std::multimap<int, GameObject*> m_projectiles;
     
     static ProjectileManager* m_ProjectileManager;
 };

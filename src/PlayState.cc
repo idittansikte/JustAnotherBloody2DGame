@@ -42,25 +42,30 @@ void PlayState::HandleEvents(Game* game)
   if(Input::getInstance()->is_key_pressed(KEY_SPACE))
       game->PushState(PauseState::Instance());
       
-  if(Input::getInstance()->is_key_pressed(KEY_RIGHT))
+  if(Input::getInstance()->is_key_pressed(KEY_RIGHT) || Input::getInstance()->is_key_pressed(KEY_D))
       m_Level->getPlayer()->movement_right();
       
-  if(Input::getInstance()->is_key_pressed(KEY_LEFT))
+  if(Input::getInstance()->is_key_pressed(KEY_LEFT) || Input::getInstance()->is_key_pressed(KEY_A))
       m_Level->getPlayer()->movement_left();
   
-  if(Input::getInstance()->is_key_pressed(KEY_UP))
+  if(Input::getInstance()->is_key_down(KEY_UP) || Input::getInstance()->is_key_down(KEY_W))
       m_Level->getPlayer()->movement_up();
       
-  if(Input::getInstance()->is_key_pressed(KEY_DOWN))
+  if(Input::getInstance()->is_key_pressed(KEY_DOWN) || Input::getInstance()->is_key_pressed(KEY_S))
       m_Level->getPlayer()->movement_down();
       
   if(Input::getInstance()->is_mouse_down(MOUSE_LEFT))
       m_Level->getPlayer()->movement_shoot();
 }
 void PlayState::Update(Game* game)
-{
-  if( !m_is_paused )
+{ 
+  if( !m_is_paused ){
+    if( m_Level->getPlayer()->isDead() ){
+      m_Level->getPlayer()->updatePos(m_Level->getPlayer()->getStartPoint());
+      m_Level->getPlayer()->setAlive();
+    }
     m_Level->Update();
+  }
 }
 
 void PlayState::Draw(Game* game, Renderer* renderer)
