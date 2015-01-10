@@ -42,14 +42,8 @@ void ProjectileManager::DrawAll(Renderer* renderer){
     
 }
 
-void ProjectileManager::AddProjectile(std::string file_path, int uniqueTag, GameObject::ObjectType shooter, Rect startRectange, Point targetPos, int distance, int speed, int damage){
-    m_projectiles.insert( std::make_pair( 4, new Projectile(startRectange, Rect(0,0,startRectange.w,startRectange.h),
-					   GameObject::PROJECTILE, file_path, uniqueTag, shooter, targetPos, distance, speed, damage, true, 0) ) );
-}
-
-void ProjectileManager::AddProjectile(std::string file_path, int uniqueTag, GameObject::ObjectType shooter, Rect startRectange, float angle, int distance, int speed, int damage){
-    m_projectiles.insert( std::make_pair( 4, new Projectile(startRectange, Rect(0,0,startRectange.w,startRectange.h),
-					   GameObject::PROJECTILE, file_path, uniqueTag, shooter, angle, distance, speed, damage, true, 0 ) ) );
+void ProjectileManager::AddProjectile(Projectile* np){
+    m_projectiles.insert( std::make_pair( 4, np ) );
 }
 
 

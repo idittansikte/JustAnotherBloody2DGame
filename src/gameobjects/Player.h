@@ -11,12 +11,13 @@
 
 class Platform;
 class Renderer;
+class Projectile;
 
 class Player : public MovingGameObject
 {
   public:
     
-  Player( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID , bool immune, int health, int damage);
+  Player( Rect r, Rect c, std::string texturePath, int uniqueID , bool immune, int health, int damage, Projectile* currentProjectile);
   
   void Init();
   
@@ -29,6 +30,8 @@ class Player : public MovingGameObject
   
   void Clean();
   
+  void Reset();
+  
   void movement_left();
   void movement_right();
   void movement_up();
@@ -37,11 +40,14 @@ class Player : public MovingGameObject
   
   void JumpHandler();
   
+  //GameObject* Clone() { return new Player(*this); }
   GameObject* Clone() { return new Player(*this); }
   
   void HandleAcceleration(GameObject* otherObject);
   
   Point getStartPoint() const { return m_start_pos; }
+  
+  ObjectType getType() { return GameObject::PLAYER; }
   
   private:
     
@@ -58,6 +64,8 @@ class Player : public MovingGameObject
   
   int m_uniqueTag{10000};
   // PlayerState* currentState;
+  
+  Projectile* m_currentProjectile;
   
 };
 

@@ -34,13 +34,17 @@ class MovingGameObject : public GameObject
     void Draw(Renderer* renderer);
     
     void Clean();
-  
+    
+    virtual void Reset();
+    
+    virtual ObjectType getType() = 0;
+    
     void apply_velocity_x(float x);
     void apply_velocity_y(float y);
     
   protected:
-    MovingGameObject( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID, bool immune, int health, int damage)
-      : GameObject(r, c, otype, texturePath, uniqueID, immune, health, damage), vx(0), vy(0), ax(1.0), ay(0.5)
+    MovingGameObject( Rect r, Rect c, std::string texturePath, int uniqueID, bool immune, int health, int damage)
+      : GameObject(r, c, texturePath, uniqueID, immune, health, damage), vx(0), vy(0), ax(1.0), ay(0.5)
     {}
     
     virtual GameObject* Clone() = 0;

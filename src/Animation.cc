@@ -28,6 +28,10 @@ void Animation::Update(){
     }
 }
 
+bool Animation::AnimationFinished(){
+    return m_framecounter == m_framePositions.size();
+}
+
 void Animation::DrawCurrentFrame( Renderer* renderer, Rect boxToFill, bool flipHorisontal ){
     
     
@@ -48,7 +52,7 @@ void Animation::Next(){
     ++m_framecounter;
     
     
-    if( m_framecounter == m_framePositions.size() ){
+    if( AnimationFinished() ){
 	if( !m_onlyOnce )
 	    Reset();
     }

@@ -23,10 +23,14 @@ class StaticGameObject : public GameObject
     virtual void Draw(Renderer* renderer);
     
     void Clean();
+    
+    virtual void Reset();
+    
+    virtual ObjectType getType() = 0;
   
   protected:
-    StaticGameObject( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath , int uniqueID, bool immune, int health, int damage)
-      : GameObject(r, c, otype, texturePath, uniqueID, immune, health, damage)
+    StaticGameObject( Rect r, Rect c, std::string texturePath , int uniqueID, bool immune, int health, int damage)
+      : GameObject(r, c, texturePath, uniqueID, immune, health, damage)
     {}
   
     virtual GameObject* Clone() = 0;

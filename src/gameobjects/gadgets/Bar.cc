@@ -16,6 +16,10 @@ void Bar::showBar(float uptime){
 
 void Bar::drawHealthBar(Renderer* renderer, GameObject* lhs){
     
+    if(lhs->getImmune())
+	return;
+    
+    
     Rect r = lhs->getRect();
     
     if(m_timer.getSecondsFromStart() < m_uptime){

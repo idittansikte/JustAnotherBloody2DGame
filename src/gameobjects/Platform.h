@@ -19,7 +19,7 @@ class Platform : public StaticGameObject
  
   enum State{NORMAL, DIES};
   
-  Platform( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID, bool immune, int health, int damage, int damageTicks,
+  Platform( Rect r, Rect c, std::string texturePath, int uniqueID, bool immune, int health, int damage, int damageTicks,
 	   int friktion, int m_jumpAcceleration );
   
   void Init();
@@ -32,12 +32,17 @@ class Platform : public StaticGameObject
   
   void Clean();
   
+  void Reset();
+  
   GameObject* Clone();
+  ObjectType getType() { return GameObject::PLATFORM; }
   
   int getFriktion(){ return m_friktion; }
   int getJumpAcceleration(){ return m_jumpAcceleration; }
   
   private:
+    
+    Timer m_damagetimer;
     
     State currentState{NORMAL};
     

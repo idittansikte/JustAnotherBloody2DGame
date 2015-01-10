@@ -18,8 +18,8 @@ public:
     void DrawAll(Renderer* renderer);
     
     
-    void AddProjectile(std::string file_path, int uniqueTag, GameObject::ObjectType shooter, Rect startRectange, Point targetPos, int speed, int distance, int damage);
-    void AddProjectile(std::string file_path, int uniqueTag, GameObject::ObjectType shooter, Rect startRectange, float angle, int speed, int distance, int damage);
+    void AddProjectile(Projectile* np);
+    
     std::multimap<int, GameObject*> GetProjectiles() const;
 	
     static ProjectileManager* getInstance(){

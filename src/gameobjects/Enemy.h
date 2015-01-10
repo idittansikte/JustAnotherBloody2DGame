@@ -6,6 +6,8 @@
 #include "MovingGameObject.h"
 #include "../Point.h"
 
+class Projectile;
+
 class Enemy : public MovingGameObject
 {
   public:
@@ -13,7 +15,6 @@ class Enemy : public MovingGameObject
   Enemy(
 	Rect r,
 	Rect c,
-	GameObject::ObjectType otype,
 	std::string texturePath,
 	int uniqueID,
 	bool immune,
@@ -21,7 +22,7 @@ class Enemy : public MovingGameObject
 	int damage
 	);
   
-  void Init();
+  void Init(Point startpos);
   
   void HandleCollision(GameObject* otherObject);
   
@@ -31,11 +32,37 @@ class Enemy : public MovingGameObject
   
   void Clean();
   
+  void Reset();
+  
+  void setTarget(GameObject* target, int aggrodistance);
+	    
+  void setProjectile(Projectile* projectile, int intervall);
+  
   GameObject* Clone() { return new Enemy(*this); }
+  
+  ObjectType getType() { return GameObject::ENEMY; }
+  
+  bool TargetInRange();
+  
+  void MakeMovement();
+  
+  void MakeAttack();
+  void Idle();
+  void RangeAttackFocus();
+  void CombatAttackFocus();
   
   private:
     
-    const Point m_start_position;
+    Point m_start_position;
+    
+    GameObject* m_target;
+    int m_aggroDistance;
+    float m_angle;
+    
+    Projectile* m_projectile;
+    int m_intervall;
+    
+    Timer m_timer;
    /* 
     std::string m_name{""};
     

@@ -14,9 +14,9 @@
 class GameObject
 {
   public:
-    enum ObjectType {PLAYER, PLATFORM, INVI_PLATFORM, ENEMY, PROJECTILE};
+    enum ObjectType {NONE, PLAYER, PLATFORM, ENEMY, PROJECTILE};
     
-    virtual void Init();
+    virtual void Init(Point startpos);
     
     virtual void HandleCollision(GameObject* otherObject);
     
@@ -26,8 +26,11 @@ class GameObject
     
     virtual void Clean();
     
+    virtual void Reset();
+    
     //Objects position functions
     Rect getRect(){ return m_rRect; }
+    Point getPos() { return Point(m_rRect.x, m_rRect.y); }
     Rect getCollisionRect();
     
     Point getCenterPos(){ return Point(m_rRect.x + (m_rRect.w/2), m_rRect.y + (m_rRect.h/2)); }
@@ -38,7 +41,7 @@ class GameObject
     
     //Objects texture and types
     std::string getTexturePath() { return m_sTexturePath; }
-    ObjectType getObjectType() { return m_eObjectType; }
+    virtual ObjectType getType() = 0;
     int getUniqueTag(){ return m_iUniqueID; }
     void changeUniqueTag(int tag){ m_iUniqueID = tag; }
     
@@ -50,19 +53,24 @@ class GameObject
     void setAlive();
     bool isDead();
     
+    bool getImmune() const { return m_immune; }
+    int getDamage() const { return m_damage; }
+    
+    
     void AddAnimation(std::string animationName, Animation* newAnimation);
     Animation* GetAnimation(std::string animationName);
     void CloneAnimations();
     
-    int getMaxHealth(){ return m_max_health;}	
-    int getCurrentHealth(){ return m_health;}
+    int getMaxHealth() const { return m_max_health;}	
+    int getCurrentHealth() const { return m_health;}
+    void DrainHealth(int damage);
     
-    Bar* m_bar;
-
-  protected:
-    GameObject( Rect r, Rect c, ObjectType oType, std::string texturePath, int uniqueID, bool immune, int health, int damage);
+    Bar* m_bar; // Healthbar
     
     virtual GameObject* Clone() = 0;
+
+  protected:
+    GameObject( Rect r, Rect c, std::string texturePath, int uniqueID, bool immune, int health, int damage);
     
     
     const int m_max_health;
@@ -71,8 +79,6 @@ class GameObject
     const int m_damage;
     
   private:
-    
-    ObjectType m_eObjectType;
     
     const std::string m_sTexturePath;
     

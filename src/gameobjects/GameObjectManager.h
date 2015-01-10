@@ -7,27 +7,30 @@
 #include "../Rect.h"
 #include <map>
 
-//#include "../lua/LuaScript.h"
-//#include "../Animation.h"
-
-#include "Enemy.h"
-#include "Platform.h"
-#include "../lua/LuaScript.h"
 class Animation;
+class LuaScript;
+class Enemy;
+class Projectile;
+class Platform;
+class Player;
+class GameObject;
 
 struct Variables{
-    std::string spritesheet = "";
+    std::string spritesheet, projectilename = "";
     Rect size, collisionbox, framesize, screensize;
-    bool immune, doonce;
-    int health, damage, damageticks, friktion, jumpacceleration;
-    int delay;
+    bool immune, doonce, ranger, gravity, targetplayer;
+    int health, damage, damageticks, friktion, jumpacceleration, distance;
+    int delay, intervall, aggrodistance;
+    float speed;
     std::vector<Point> framepositions;
 };
 
 class GameObjectManager{
     public:
-	GameObjectManager(const std::string& filename);
+	GameObjectManager();
 	~GameObjectManager();
+	
+	enum ListType{PLATFORMLIST, PROJECTILELIST, ENEMYLIST};
 	
 	void LoadGameObjectSpecifics(Variables& var, const std::string global);
 	void LoadMovingObjectSpecifics(Variables& var);
@@ -38,12 +41,34 @@ class GameObjectManager{
 	
 	void LoadPlatforms();
 	void LoadEnemys();
+	void LoadProjectiles();
+	void LoadPlayer();
 	
-	GameObject* GetGameObject(const std::string name);
-	GameObject* GetEnemy(const std::string name);
+
+	GameObject* GetNewPlatform(const std::string name);
+	GameObject* GetNewEnemy(const std::string name);
+	Projectile* GetNewProjectile(const std::string name);
+	Player* GetNewPlayer(const std::string name);
+	
+	//std::map<std::string, Platform*>* getPlatformList(){ return &loadedPlatforms };
+	//std::map<std::string, Enemy*>* getEnemyList(){ return &loadedEnemys };
+	//Player* GetPlayer(){ return &loadedPlayer; }
+	
+	std::map<std::string, GameObject*>* GetLoadedList(ListType listtype);
+	
+	static GameObjectManager* Instance()
+	{
+	  return &m_GameObjectManager;
+	}
+
     private:
-	std::map<std::string, Platform*> loadedPlatforms;
-	std::map<std::string, Enemy*> loadedEnemys;
+	static GameObjectManager m_GameObjectManager;
+	
+	std::map<std::string, GameObject*> loadedPlatforms;
+	std::map<std::string, GameObject*> loadedEnemys;
+	std::map<std::string, Projectile*> loadedProjectiles;
+	
+	Player* loadedPlayer;
 	LuaScript* m_luaScript;
 };
 

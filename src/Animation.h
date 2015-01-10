@@ -32,7 +32,7 @@ class Animation : public Sprite {
 	
 	Animation* Clone(){ return new Animation(*this); }
 	
-	
+	bool AnimationFinished();
 	
     private:
 	Animation() = delete;

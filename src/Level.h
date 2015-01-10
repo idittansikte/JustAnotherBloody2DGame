@@ -24,13 +24,12 @@ class Level
   void LoadLevel();
   void SaveLevel();
   
-  void addGameObject(int x, int y, int w, int h, GameObject::ObjectType OType, std::string texturePath);
-  
   void Update();
   
   void Draw(Renderer* Renderer);
   
   void Clean();
+  void Reset();
   
   Player* getPlayer(){ return m_Player; }
   
@@ -45,6 +44,8 @@ class Level
     std::multimap<int, GameObject*> m_vMovingGameObjects;
     std::multimap<int, GameObject*> m_vStaticGameObjects;
     std::multimap<int, GameObject*> m_vMiscGameObjects;
+    
+    vector<std::multimap<int, GameObject*>* > m_objectLists; 
     
     Collision* m_StaticColliesGrid;
     Collision* m_MovingColliesGrid;

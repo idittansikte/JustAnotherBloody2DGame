@@ -43,11 +43,13 @@ void MovingGameObject::HandleCollision(GameObject* otherObject)
 {
   GameObject::HandleCollision(otherObject);
   
-  Rect A = this->getCollisionRect();
-  Rect B = otherObject->getCollisionRect();
+
   
-  //if ( otherObject->getObjectType() == GameObject::PLATFORM ){
+  if ( this->getType() != GameObject::PROJECTILE || otherObject->getType() != GameObject::PROJECTILE ){
     
+      Rect A = this->getCollisionRect();
+      Rect B = otherObject->getCollisionRect();
+      
     if ( collidedFromTop(otherObject) ){ //Collied  top
       m_previous_position.y = B.y-A.h;
       updatePos_y( m_previous_position.y );
@@ -71,7 +73,7 @@ void MovingGameObject::HandleCollision(GameObject* otherObject)
       updatePos_x(m_previous_position.x);
       contactLeft = true;
     }
-  //}
+  }
 }
 
 void MovingGameObject::PhysicHandler(){
@@ -131,6 +133,18 @@ void MovingGameObject::Draw(Renderer* renderer)
 void MovingGameObject::Clean()
 {
   
+}
+
+void MovingGameObject::Reset(){
+  GameObject::Reset();
+  vx = 0;
+  vy = 0;
+  ax = 1.0;
+  ay = 0.5;
+  contactTop = false;
+  contactBottom = false;
+  contactLeft = false;
+  contactRight = false;
 }
 
 void MovingGameObject::apply_velocity_x(float x_){

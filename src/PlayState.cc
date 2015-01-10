@@ -51,6 +51,9 @@ void PlayState::HandleEvents(Game* game)
   if(Input::getInstance()->is_key_down(KEY_UP) || Input::getInstance()->is_key_down(KEY_W))
       m_Level->getPlayer()->movement_up();
       
+  if(Input::getInstance()->is_key_down(KEY_F12))
+      m_Level->Reset();
+      
   if(Input::getInstance()->is_key_pressed(KEY_DOWN) || Input::getInstance()->is_key_pressed(KEY_S))
       m_Level->getPlayer()->movement_down();
       
@@ -61,8 +64,7 @@ void PlayState::Update(Game* game)
 { 
   if( !m_is_paused ){
     if( m_Level->getPlayer()->isDead() ){
-      m_Level->getPlayer()->updatePos(m_Level->getPlayer()->getStartPoint());
-      m_Level->getPlayer()->setAlive();
+      m_Level->Reset();
     }
     m_Level->Update();
   }

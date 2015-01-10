@@ -3,10 +3,9 @@
 #include <iostream>
 #include <utility>
 
-GameObject::GameObject( Rect r, Rect c, ObjectType oType, std::string texturePath, int uniqueID, bool immune, int health, int damage):
+GameObject::GameObject( Rect r, Rect c, std::string texturePath, int uniqueID, bool immune, int health, int damage):
       m_rRect(r),
       m_rcollisionRect(c),
-      m_eObjectType(oType),
       m_sTexturePath(texturePath),
       m_iUniqueID(uniqueID),
       m_dead(false),
@@ -18,21 +17,18 @@ GameObject::GameObject( Rect r, Rect c, ObjectType oType, std::string texturePat
       m_bar = new Bar();
     }
 
-void GameObject::Init()
+void GameObject::Init(Point startpos)
 {
   
 }
 
 void GameObject::HandleCollision(GameObject* otherObject){
-          if ( otherObject->getObjectType() == GameObject::PROJECTILE ){
-	    m_health -= otherObject->m_damage;
-	    m_bar->showBar(3);
-	  }
+
 }
 	  
 void GameObject::Update()
 {
-  if (m_health <= 0)
+  if (m_health <= 0 && !m_immune )
     setDead();
 }
 
@@ -42,6 +38,14 @@ void GameObject::Draw(Renderer* renderer){
 
 void GameObject::Clean(){
   
+}
+
+void GameObject::Reset(){
+  m_health = m_max_health;
+  setAlive();
+  for(auto it : m_animations){
+    it.second->Reset();
+  }
 }
 
 bool GameObject::is_in_screen_range(Point screenCenter, Rect screenSize){
@@ -90,4 +94,15 @@ void GameObject::CloneAnimations(){
         it->second = it->second->Clone();
     }
     
+}
+
+void GameObject::DrainHealth(int damage){
+  if( !m_immune ){
+    m_health -= damage;
+    m_bar->showBar(3);
+    if(m_health > m_max_health)
+      m_health = m_max_health;
+    else if(m_health < 0)
+      m_health = 0;
+  }
 }

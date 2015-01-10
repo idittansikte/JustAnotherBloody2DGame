@@ -6,91 +6,73 @@
 Projectile::Projectile(
 	Rect r,
 	Rect c,
-	GameObject::ObjectType otype,
 	std::string texturePath,
 	int uniqueID,
-	GameObject::ObjectType shooterType,
-	Point targetPos,
 	int distance,
-	int speed,
-	int damage,
-	int immune,
-	int health
+	bool immune,
+	int health,
+	float velocity
 	):
-    MovingGameObject(r, c, otype, texturePath, uniqueID, immune, health, damage), m_shooterType(shooterType), m_distance(distance)
-  {
-    
+    MovingGameObject( r, c, texturePath, uniqueID, immune, health, 0 ), m_distance(distance), m_velocity(velocity)
+  {}
+  
+
+void Projectile::Init( GameObject* shooter, int uniqueTag, Point startpos, Point targetpos, float angle )
+{
+  m_shooter = shooter;
+  updatePos(startpos);
+  changeUniqueTag(uniqueTag);
+  
+  if(targetpos.x == 0 && targetpos.y == 0){
+    m_angle = angle;
+  }
+  else{
     //Calculate angle of direction
-    int deltaX = targetPos.x - r.x;
-    int deltaY = targetPos.y - r.y;
+    int deltaX = targetpos.x - startpos.x;
+    int deltaY = targetpos.y - startpos.y;
     m_angle = ( atan2(deltaY,deltaX) * 180 ) / 3.14;
-
-    m_startPos = Point(r.x, r.y);
   }
-  
-Projectile::Projectile(
-	Rect r,
-	Rect c,
-	GameObject::ObjectType otype,
-	std::string texturePath,
-	int uniqueID,
-	GameObject::ObjectType shooterType,
-	float angle,
-	int distance,
-	int speed,
-	int damage,
-	int immune,
-	int health
-	):
-    MovingGameObject(r, c, otype, texturePath, uniqueID, immune, health, damage), m_shooterType(shooterType), m_distance(distance), m_angle(angle)
-  {
-    m_startPos = Point(r.x, r.y);
+      m_startPos = Point(startpos.x, startpos.y);
+}
+    
+void Projectile::HandleCollision(GameObject* otherObject){
+  if(m_shooter->getType() != otherObject->getType() && this->getType() != otherObject->getType()){ // not if projectile hits own kind
+    this->setDead();
+    if(m_shooter != nullptr)
+      otherObject->DrainHealth( m_shooter->getDamage() );
   }
-
-void Projectile::Init()
-{
-  
 }
 
-void Projectile::HandleCollision(GameObject* otherObject)
-{
-  this->setDead();
-}
-
-void Projectile::Update()
-{
+void Projectile::Update(){
+  
   Rect pos = this->getRect();
-  
-  float velocity = 12.0;
-  
-  
   // Calculate distance between now and startpos
   double distance = sqrt( (pos.x - m_startPos.x)*(pos.x - m_startPos.x) + (pos.y - m_startPos.y)*(pos.y - m_startPos.y) );
-  
+
   if( distance > m_distance )
     this->setDead();
-    
+
   if(isDead())
     return;
   
   Point centerSize(pos.w/2, pos.h/2);
   
-  float newPosx = pos.x + velocity * cos(m_angle * 3.14/180);
-  float newPosy = pos.y + velocity * sin(m_angle * 3.14/180);
+  float newPosx = pos.x + m_velocity * cos(m_angle * 3.14/180);
+  float newPosy = pos.y + m_velocity * sin(m_angle * 3.14/180);
   
   updatePos(Point(newPosx, newPosy));
 }
 
-void Projectile::Draw(Renderer* renderer)
-{
+void Projectile::Draw(Renderer* renderer){
+  
   Rect pos = this->getRect();
   Point centerSize(pos.w/2, pos.h/2);
   
   if(!isDead()){
-    renderer->drawTexture( Rect(pos.x,pos.y,40,40), "imgs/bullet.png", true, Rect(0,0,50,50), false, false, centerSize, m_angle );
+    renderer->drawTexture( pos, this->getTexturePath(), true, Rect(), false, false, centerSize, m_angle );
   }
   else{
-    //GetAnimation("DEATH")->DrawCurrentFrame(renderer, getRect());
+    GetAnimation("DEATH")->DrawCurrentFrame(renderer, getRect());
     return;
   }
     
@@ -101,4 +83,8 @@ void Projectile::Draw(Renderer* renderer)
 void Projectile::Clean()
 {
   
+}
+
+void Projectile::Reset(){
+  setDead();
 }

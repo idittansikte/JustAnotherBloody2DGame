@@ -7,13 +7,16 @@
 #include <iostream>
 #include <math.h>
 
-Player::Player( Rect r, Rect c, GameObject::ObjectType otype, std::string texturePath, int uniqueID , bool immune, int health, int damage) :
-  MovingGameObject(r, c, otype, texturePath, uniqueID, immune, health, damage),
+Player::Player( Rect r, Rect c, std::string texturePath, int uniqueID , bool immune, int health, int damage, Projectile* currentProjectile) :
+  MovingGameObject(r, c, texturePath, uniqueID, immune, health, damage),
+  m_currentProjectile(currentProjectile),
   m_jump_start_velocity(12.0),
   m_want_jump(false),
   m_doubleJump_used(false),
   m_start_pos(Point(r.x, r.y))
-  {}
+  {
+    m_bar->setBarBox(Rect( -10, -10, 70, 4));
+  }
 
 void Player::Init()
 {
@@ -46,7 +49,10 @@ void Player::Draw(Renderer* renderer)
   cameraAdjustment = renderer->getCameraAdjustment();
   
   if(!isDead()){
-    renderer->drawTexture( getRect(), getTexturePath(), true);
+    if (m_current_direction == RIGHT)
+      renderer->drawTexture( getRect(), getTexturePath(), true);
+    else
+      renderer->drawTexture( getRect(), getTexturePath(), true, Rect(), true);
     renderPistol(renderer);
   }
   else{
@@ -60,6 +66,14 @@ void Player::Draw(Renderer* renderer)
 void Player::Clean()
 {
   
+}
+
+void Player::Reset(){
+  MovingGameObject::Reset();
+  
+  m_want_jump=false;
+  m_doubleJump_used=false;
+  updatePos(m_start_pos);
 }
 
 void Player::movement_left(){
@@ -86,10 +100,11 @@ void Player::movement_down(){
 void Player::movement_shoot(){
   
   //double distance = sqrt( (pistolHole.x - getCenterPos().x)*(pistolHole.x - getCenterPos().x) + (pistolHole.y - getCenterPos().y)*(pistolHole.y - getCenterPos().y) );
-  
-  ProjectileManager::getInstance()->AddProjectile(BULLET_FILEPATH, m_uniqueTag++, GameObject::PLAYER, Rect(pistolHole.x,pistolHole.y,40,40), m_angle, 250, 3, 100);
+  Projectile* clone = m_currentProjectile->Clone();
+  clone->Init(this, m_uniqueTag++, pistolHole, Point(), m_angle );
+  ProjectileManager::getInstance()->AddProjectile(clone);
 }
-
+    
 void Player::JumpHandler(){
   
   if( contactTop ){
@@ -154,13 +169,13 @@ void Player::renderPistol(Renderer* renderer){
 
 void Player::HandleAcceleration(GameObject* otherObject){
   
-  if (otherObject->getObjectType() == PLATFORM){
+  if (otherObject->getType() == PLATFORM){
     Platform* pl = dynamic_cast<Platform*>(otherObject);
     float temp = pl->getFriktion();
     m_ground_friktion = temp/10;
     m_ground_jumpacceleration = pl->getJumpAcceleration();
   }
-  else
+  else if (otherObject->getType() != PROJECTILE)
     m_ground_friktion = 5;
   
 }

@@ -25,3 +25,7 @@ void StaticGameObject::Clean()
 {
   
 }
+
+void StaticGameObject::Reset(){
+  GameObject::Reset();
+}

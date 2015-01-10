@@ -21,7 +21,10 @@ class Sprite{
 	
     private:
 	
-    std::string m_filename;
+        std::string m_filename;
+    
+      // Size that we want on screen
+      //Rect m_screenSize;
 };
 
 #endif

@@ -1,5 +1,6 @@
 #include "MenuState.h"
 #include "PlayState.h"
+#include "EditorState.h"
 
 #include "Constants.h"
 #include "InputDefinition.h"
@@ -33,7 +34,12 @@ void MenuState::HandleEvents(Game* game)
       
   if(Input::getInstance()->is_key_pressed(KEY_SPACE))
       game->ChangeState(PlayState::Instance());
-      
+  
+  if(Input::getInstance()->is_mouse_down(MOUSE_LEFT)){
+      if(Input::getInstance()->is_mouse_inside(Rect(0,0,50,50))){
+	game->ChangeState(EditorState::Instance());
+      }
+  }
 }
 void MenuState::Update(Game* game)
 {
