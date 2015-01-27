@@ -3,9 +3,23 @@
 #include <iostream>
 #include <math.h>
 
-void MovingGameObject::Init()
+void MovingGameObject::Init(Point startpos, int uniquetag)
 {
-  
+  GameObject::Init(startpos, uniquetag);
+  m_start_position = startpos;
+}
+
+void MovingGameObject::Reset(){
+  GameObject::Reset();
+  vx = 0;
+  vy = 0;
+  ax = 1.0;
+  ay = 0.5;
+  contactTop = false;
+  contactBottom = false;
+  contactLeft = false;
+  contactRight = false;
+  updatePos(m_start_position);
 }
 
 bool MovingGameObject::collidedFromLeft(GameObject* otherObject)
@@ -45,7 +59,7 @@ void MovingGameObject::HandleCollision(GameObject* otherObject)
   
 
   
-  if ( this->getType() != GameObject::PROJECTILE || otherObject->getType() != GameObject::PROJECTILE ){
+  if ( this->getType() != GameObject::PROJECTILE && otherObject->getType() != GameObject::PROJECTILE ){
     
       Rect A = this->getCollisionRect();
       Rect B = otherObject->getCollisionRect();
@@ -128,23 +142,6 @@ void MovingGameObject::Update()
 void MovingGameObject::Draw(Renderer* renderer)
 {
     GameObject::Draw(renderer);
-}
-
-void MovingGameObject::Clean()
-{
-  
-}
-
-void MovingGameObject::Reset(){
-  GameObject::Reset();
-  vx = 0;
-  vy = 0;
-  ax = 1.0;
-  ay = 0.5;
-  contactTop = false;
-  contactBottom = false;
-  contactLeft = false;
-  contactRight = false;
 }
 
 void MovingGameObject::apply_velocity_x(float x_){

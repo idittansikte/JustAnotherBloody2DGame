@@ -277,3 +277,10 @@ Rect Renderer::getWindowSize(){
     
     return Rect(0,0,w,h);
 }
+
+void Renderer::DisableCursor(bool disable){
+    if(disable)
+	SDL_ShowCursor(SDL_DISABLE);
+    else
+	SDL_ShowCursor(SDL_ENABLE);
+}

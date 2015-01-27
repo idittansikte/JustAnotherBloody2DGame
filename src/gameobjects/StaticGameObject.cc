@@ -1,8 +1,12 @@
 #include "StaticGameObject.h"
 
-void StaticGameObject::Init()
+void StaticGameObject::Init(Point startpos, int uniquetag)
 {
-    
+    GameObject::Init(startpos, uniquetag);
+}
+
+void StaticGameObject::Reset(){
+  GameObject::Reset();
 }
 
 void StaticGameObject::HandleCollision(GameObject* otherObject)
@@ -19,13 +23,4 @@ void StaticGameObject::Update()
 void StaticGameObject::Draw(Renderer* renderer)
 {
     GameObject::Draw(renderer);
-}
-
-void StaticGameObject::Clean()
-{
-  
-}
-
-void StaticGameObject::Reset(){
-  GameObject::Reset();
 }

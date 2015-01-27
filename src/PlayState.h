@@ -3,9 +3,10 @@
 
 #include "GameState.h"
 #include "Renderer.h"
-#include "Level.h"
 #include "Input.h"
 #include "LevelData.h"
+
+class Level;
 
 class PlayState : public GameState
 {
@@ -20,6 +21,7 @@ class PlayState : public GameState
     void HandleEvents(Game* game);
     void Update(Game* game);
     void Draw(Game* game, Renderer* renderer);
+    void DrawCursor(Renderer* renderer);
     
     static PlayState* Instance()
     {

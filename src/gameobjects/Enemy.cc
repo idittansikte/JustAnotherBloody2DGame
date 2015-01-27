@@ -12,28 +12,41 @@ Enemy::Enemy(
       int uniqueID,
       bool immune,
       int health,
-      int damage
+      int damage,
+      int aggroDistance
       ):
-  MovingGameObject(r, c, texturePath, uniqueID, immune, health, damage), m_start_position(Point(r.x, r.y))
+  MovingGameObject(r, c, texturePath, uniqueID, immune, health, damage), m_aggroDistance(aggroDistance)
 {
     m_bar->setBarBox(Rect( 0, 0, 100, 4));
-    // Randomzie start direction
-    if( rand() % 2 == 0)
-      SetDirection(LEFT);
-    else
-      SetDirection(RIGHT);
       
     m_projectile = nullptr;
     m_intervall = 0;
     m_target = nullptr;
-    m_aggroDistance = 0;
     m_timer.start();
-  
+    SetDirection(LEFT);
 }
 
-void Enemy::Init(Point startpos)
+void Enemy::Init(Point startpos, int uniquetag, GameObject* target)
 {
-  m_start_position = startpos;
+  MovingGameObject::Init(startpos, uniquetag);
+  m_target = target;
+      // Randomzie start direction
+    if( rand() % 2 == 0)
+      SetDirection(LEFT);
+    else
+      SetDirection(RIGHT);
+}
+
+void Enemy::Reset(){
+  MovingGameObject::Reset();
+
+  if( rand() % 2 == 0)
+    SetDirection(LEFT);
+  else
+    SetDirection(RIGHT);
+    
+  m_timer.reset();
+  
 }
 
 void Enemy::HandleCollision(GameObject* otherObject)
@@ -59,6 +72,7 @@ void Enemy::Update()
   }
   
   MovingGameObject::Update();
+  CleanupFrame();
 }
 
 void Enemy::Draw(Renderer* renderer)
@@ -79,30 +93,6 @@ void Enemy::Draw(Renderer* renderer)
     MovingGameObject::Draw(renderer);
 }
 
-void Enemy::Clean()
-{
-  
-}
-
-void Enemy::Reset(){
-  MovingGameObject::Reset();
-  
-  updatePos(m_start_position);
-
-  if( rand() % 2 == 0)
-    SetDirection(LEFT);
-  else
-    SetDirection(RIGHT);
-    
-  m_timer.reset();
-  
-}
-
-void Enemy::setTarget(GameObject* target, int aggrodistance){
-  m_target = target;
-  m_aggroDistance = aggrodistance;    
-}
-
 void Enemy::setProjectile(Projectile* projectile, int intervall){
   
   m_projectile = projectile;
@@ -115,7 +105,7 @@ bool Enemy::TargetInRange(){
   Point thispos = this->getPos();
   
   double distance = sqrt( (thispos.x - targetpos.x)*(thispos.x - targetpos.x) + (thispos.y - targetpos.y)*(thispos.y - targetpos.y) );
-  
+
   return ( distance < m_aggroDistance );
 }
 
@@ -156,11 +146,13 @@ void Enemy::MakeAttack(){
 void Enemy::Idle(){
   
   Rect r = getRect();
+  Point startpos = GetStartPos();
   MakeMovement();
-    if( r.x >= m_start_position.x + 200 ){
+  
+    if( r.x >= startpos.x + 200 || contactRight){
       SetDirection(LEFT);
     }
-    else if( r.x <= m_start_position.x - 200 ){
+    else if( r.x <= startpos.x - 200 || contactLeft){
       SetDirection(RIGHT);
     }
 }
@@ -191,6 +183,7 @@ void Enemy::CombatAttackFocus(){
 void Enemy::MakeMovement(){
   
   Rect r = getRect();
+  Point startpos = GetStartPos();
   
   if(GetDirection() == LEFT){
     if(vx >= -(ax*5))
@@ -201,12 +194,28 @@ void Enemy::MakeMovement(){
       vx += ax;
   }
   // Check if outside of spawn
-  if( r.x > m_start_position.x + 200 ){ // If too far to the right
-    this->updatePos_x(m_start_position.x + 200);
+  if( r.x > startpos.x + 200 ){ // If too far to the right
+    this->updatePos_x(startpos.x + 200);
     vx = 0;
   }
-  else if( r.x < m_start_position.x - 200 ){ // If too far to the left
-    this->updatePos_x(m_start_position.x - 200);
+  else if( r.x < startpos.x - 200 ){ // If too far to the left
+    this->updatePos_x(startpos.x - 200);
     vx = 0;
   }
+}
+
+void Enemy::SetMaxMovementRight(int max){
+  m_max_movement_right = max;
+}
+
+void Enemy::SetMaxMovementLeft(int max){
+  m_max_movement_left = max;
+}
+
+int Enemy::GetMaxMovementRight(){
+  return m_max_movement_right;
+}
+
+int Enemy::GetMaxMovementLeft(){
+  return m_max_movement_left;
 }

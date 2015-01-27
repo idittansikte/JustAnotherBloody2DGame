@@ -16,17 +16,15 @@ class GameObject
   public:
     enum ObjectType {NONE, PLAYER, PLATFORM, ENEMY, PROJECTILE};
     
-    virtual void Init(Point startpos);
+    void Init(Point startpos, int uniquetag);
+    
+    virtual void Reset();
     
     virtual void HandleCollision(GameObject* otherObject);
     
     virtual void Update();
     
     virtual void Draw(Renderer* renderer);
-    
-    virtual void Clean();
-    
-    virtual void Reset();
     
     //Objects position functions
     Rect getRect(){ return m_rRect; }
@@ -44,6 +42,10 @@ class GameObject
     virtual ObjectType getType() = 0;
     int getUniqueTag(){ return m_iUniqueID; }
     void changeUniqueTag(int tag){ m_iUniqueID = tag; }
+    
+    // ObjectName
+    std::string GetName(){ return m_objectName; }
+    void SetName( std::string name ){ m_objectName = name; }
     
     // Check if object should for example, be rendered or updated...
     bool is_in_screen_range(Point screenCenter, Rect screenSize);
@@ -79,7 +81,7 @@ class GameObject
     const int m_damage;
     
   private:
-    
+    std::string m_objectName;
     const std::string m_sTexturePath;
     
     Rect m_rRect; // very far sides of sprite

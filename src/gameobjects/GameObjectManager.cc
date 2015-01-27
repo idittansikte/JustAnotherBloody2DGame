@@ -36,7 +36,6 @@ GameObjectManager::~GameObjectManager()
 	    delete it.second;
 	    it.second = nullptr;
 	}
-	delete loadedPlayer;
 	loadedPlayer = nullptr;
 }
 
@@ -130,9 +129,12 @@ void GameObjectManager::LoadPlatforms(){
 	var.damageticks = m_luaScript->get<int>("Platform." + it + ".DamageTicks");
 	var.friktion = m_luaScript->get<int>("Platform." + it + ".Friktion");
 	var.jumpacceleration = m_luaScript->get<int>("Platform." + it + ".JumpAcceleration");
+	var.name = it;
+	Platform* newplatform = new Platform(var.size, var.collisionbox, var.spritesheet, 0,
+					    var.immune, var.health, var.damage, var.damageticks, var.friktion, var.jumpacceleration);
+	newplatform->SetName(var.name);
+	loadedPlatforms.insert( std::make_pair( it, newplatform ));
 	
-	loadedPlatforms.insert( std::make_pair( it, new Platform(var.size, var.collisionbox, var.spritesheet, 0,
-							    var.immune, var.health, var.damage, var.damageticks, var.friktion, var.jumpacceleration) ));
 	
 	
 	loadedPlatforms.find(it)->second->AddAnimation( "DEATH" , LoadAnimation("Platform." + it, "DEATH") );
@@ -159,11 +161,10 @@ void GameObjectManager::LoadEnemys(){
 	
 	var.gravity = m_luaScript->get<bool>("Enemy." + it + ".ApplyGravitation");
 	//
+	var.name = it;
+	Enemy* ne = new Enemy(var.size, var.collisionbox, var.spritesheet, 0, var.immune, var.health, var.damage, var.aggrodistance);
 	
-	Enemy* ne = new Enemy(var.size, var.collisionbox, var.spritesheet, 0, var.immune, var.health, var.damage);
-	
-	if(var.targetplayer)
-	    ne->setTarget(loadedPlayer, var.aggrodistance);
+	ne->SetName(var.name);
 	    
 	if(var.ranger)
 	    ne->setProjectile(GetNewProjectile(var.projectilename), var.intervall);
@@ -232,15 +233,25 @@ void GameObjectManager::LoadPlayer(){
 	var.projectilename = m_luaScript->get<std::string>("Player." + it + ".Projectile");
 	
 	loadedPlayer = new Player(var.size, var.collisionbox, var.spritesheet, 0, var.immune, var.health, var.damage, GetNewProjectile(var.projectilename)) ;
-	
+	loadedPlayer->SetName(it);
+	loadedEnemys.insert( std::make_pair( it, loadedPlayer ));
 	// Load Animations
 	loadedPlayer->AddAnimation( "WALK" , LoadAnimation("Player." + it, "WALK") );
 	loadedPlayer->AddAnimation( "DEATH" , LoadAnimation("Player." + it, "DEATH") );
     }
 }
 
-GameObject* GameObjectManager::GetNewPlatform(const std::string name){
-    return loadedPlatforms.find(name)->second->Clone();
+GameObject* GameObjectManager::GetGameObject(const std::string name){
+    GameObject* founedObject = nullptr;
+    std::vector< std::map<std::string, GameObject*>*> v = GetAllLoaded();
+    for(auto list : v){
+	std::map<std::string, GameObject*>::iterator it = list->find(name);
+	if(it != list->end()){
+	    founedObject = it->second->Clone();
+	    break;
+	}
+    }
+    return founedObject;
 }
 
 GameObject* GameObjectManager::GetNewEnemy(const std::string name){
@@ -268,4 +279,11 @@ std::map<std::string, GameObject*>* GameObjectManager::GetLoadedList(ListType li
     }
 
     return nullptr;
+}
+
+std::vector< std::map<std::string, GameObject*>*> GameObjectManager::GetAllLoaded(){
+    std::vector< std::map<std::string, GameObject*>*> v;
+    v.push_back(&loadedPlatforms);
+    v.push_back(&loadedEnemys);
+    return v;
 }

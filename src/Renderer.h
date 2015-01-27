@@ -38,6 +38,8 @@ class Renderer
     
     Rect getWindowSize();
     
+    void DisableCursor(bool disable);
+    
   private:
     SDL_Window* mWindow;
     SDL_Renderer* mRenderer;

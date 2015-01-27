@@ -15,8 +15,8 @@ class MovingGameObject : public GameObject
 {
   public:
     
-    void Init();
-    
+    void Init(Point startpos, int uniquetag);
+    virtual void Reset();
     
     bool collidedFromLeft(GameObject* otherObject);
     bool collidedFromRight(GameObject* otherObject);
@@ -32,10 +32,6 @@ class MovingGameObject : public GameObject
     void Update();
       
     void Draw(Renderer* renderer);
-    
-    void Clean();
-    
-    virtual void Reset();
     
     virtual ObjectType getType() = 0;
     
@@ -72,8 +68,11 @@ class MovingGameObject : public GameObject
     void ChangeDirection();
     Direction GetDirection();
     
+    Point GetStartPos(){ return m_start_position; }
+    
   private:
   
+  Point m_start_position;
   
   Point m_previous_position; //
   Point m_velocity;

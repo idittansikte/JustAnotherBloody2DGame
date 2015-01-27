@@ -21,7 +21,10 @@ class Level
   
   void Init();
   
-  void LoadLevel();
+  std::multimap<int,GameObject*>* GetEditorList();
+  void AddObject(int layer, GameObject* object);
+  
+  void Load(std::string levelname);
   void SaveLevel();
   
   void Update();
@@ -33,6 +36,9 @@ class Level
   
   Player* getPlayer(){ return m_Player; }
   
+  void SetCamera(Rect campos);
+  void UpdateCamera(Renderer* renderer);
+  
   private:
     int m_iWorldWidth;
     int m_iWorldHeight;
@@ -40,6 +46,9 @@ class Level
     Rect m_screenSize;
     
     LevelData m_LevelData;
+    
+    
+    std::multimap<int, GameObject*> m_vEditorList;
     
     std::multimap<int, GameObject*> m_vMovingGameObjects;
     std::multimap<int, GameObject*> m_vStaticGameObjects;
@@ -51,6 +60,8 @@ class Level
     Collision* m_MovingColliesGrid;
     
     Player* m_Player;
+    
+    Rect m_camera_position;
     
     int uniqueTag{};
      

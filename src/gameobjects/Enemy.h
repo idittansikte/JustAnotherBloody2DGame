@@ -19,22 +19,19 @@ class Enemy : public MovingGameObject
 	int uniqueID,
 	bool immune,
 	int health,
-	int damage
+	int damage,
+	int aggroDistance
 	);
   
-  void Init(Point startpos);
+  void Init(Point startpos, int uniquetag, GameObject* target);
+  
+  void Reset();
   
   void HandleCollision(GameObject* otherObject);
   
   void Update();
   
   void Draw(Renderer* renderer);
-  
-  void Clean();
-  
-  void Reset();
-  
-  void setTarget(GameObject* target, int aggrodistance);
 	    
   void setProjectile(Projectile* projectile, int intervall);
   
@@ -51,9 +48,12 @@ class Enemy : public MovingGameObject
   void RangeAttackFocus();
   void CombatAttackFocus();
   
+  void SetMaxMovementRight(int max);
+  void SetMaxMovementLeft(int max);
+  int GetMaxMovementRight();
+  int GetMaxMovementLeft();
+  
   private:
-    
-    Point m_start_position;
     
     GameObject* m_target;
     int m_aggroDistance;
@@ -63,18 +63,9 @@ class Enemy : public MovingGameObject
     int m_intervall;
     
     Timer m_timer;
-   /* 
-    std::string m_name{""};
     
-    const int m_hitpoint_max;
-    int m_hitpoint_current;
-    
-    const int m_min_damage;
-    const int m_max_damage;
-    
-    int m_attack_interval;
-    
-    int m_movement_speed;*/
+    int m_max_movement_right{};
+    int m_max_movement_left{};
 };
 
 #endif

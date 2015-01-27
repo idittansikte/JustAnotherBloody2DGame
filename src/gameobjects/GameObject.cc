@@ -17,9 +17,10 @@ GameObject::GameObject( Rect r, Rect c, std::string texturePath, int uniqueID, b
       m_bar = new Bar();
     }
 
-void GameObject::Init(Point startpos)
+void GameObject::Init(Point startpos, int uniquetag)
 {
-  
+  updatePos(startpos);
+  changeUniqueTag(uniquetag);
 }
 
 void GameObject::HandleCollision(GameObject* otherObject){
@@ -34,10 +35,6 @@ void GameObject::Update()
 
 void GameObject::Draw(Renderer* renderer){
   m_bar->drawHealthBar(renderer, this);
-}
-
-void GameObject::Clean(){
-  
 }
 
 void GameObject::Reset(){

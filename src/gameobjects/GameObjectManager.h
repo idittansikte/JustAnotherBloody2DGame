@@ -16,7 +16,7 @@ class Player;
 class GameObject;
 
 struct Variables{
-    std::string spritesheet, projectilename = "";
+    std::string spritesheet, projectilename, name = "";
     Rect size, collisionbox, framesize, screensize;
     bool immune, doonce, ranger, gravity, targetplayer;
     int health, damage, damageticks, friktion, jumpacceleration, distance;
@@ -45,7 +45,7 @@ class GameObjectManager{
 	void LoadPlayer();
 	
 
-	GameObject* GetNewPlatform(const std::string name);
+	GameObject* GetGameObject(const std::string name);
 	GameObject* GetNewEnemy(const std::string name);
 	Projectile* GetNewProjectile(const std::string name);
 	Player* GetNewPlayer(const std::string name);
@@ -55,6 +55,8 @@ class GameObjectManager{
 	//Player* GetPlayer(){ return &loadedPlayer; }
 	
 	std::map<std::string, GameObject*>* GetLoadedList(ListType listtype);
+	
+	std::vector< std::map<std::string, GameObject*>* > GetAllLoaded();
 	
 	static GameObjectManager* Instance()
 	{

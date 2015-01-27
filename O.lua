@@ -42,6 +42,116 @@ Platform = {
 		},
 	},
     },
+    
+    FIRE_DOWN = {
+    	Spritesheet = "imgs/block_fire2.png",
+	Size = { 100, 100 },
+	Collisionbox = {7,20,79,79},
+	Immune = true,
+	Health = 300,
+	Damage = 10,
+	DamageTicks = 100, -- milliseconds
+	Friktion = 2, -- 1 - 9 :: higher value = slower
+	JumpAcceleration = 15,
+	Animations = {
+	    DEATH = { -- Dont change name if you dont know what you're doin...
+		Spritesheet = "imgs/block_fire_dies.png",
+		FramePositions = { 0,0, 100,0, 200,0, 300,0 ,400,0, 500,0, 600,0, 700,0 },
+		FrameSize = { 100, 300 },
+		ScreenSize = {0,0,100,300},
+		Delay = 100, -- Millisekunder
+		DoOnce = true,
+		},
+	},
+    },
+	
+    FIRE_FORWRD = {
+    	Spritesheet = "imgs/block_fire3.png",
+	Size = { 100, 100 },
+	Collisionbox = {7,20,79,79},
+	Immune = true,
+	Health = 300,
+	Damage = 10,
+	DamageTicks = 100, -- milliseconds
+	Friktion = 2, -- 1 - 9 :: higher value = slower
+	JumpAcceleration = 15,
+	Animations = {
+	    DEATH = { -- Dont change name if you dont know what you're doin...
+		Spritesheet = "imgs/block_fire_dies.png",
+		FramePositions = { 0,0, 100,0, 200,0, 300,0 ,400,0, 500,0, 600,0, 700,0 },
+		FrameSize = { 100, 300 },
+		ScreenSize = {0,0,100,300},
+		Delay = 100, -- Millisekunder
+		DoOnce = true,
+		},
+	},
+    },
+    
+    FIRE_UP = {
+    	Spritesheet = "imgs/block_fire4.png",
+	Size = { 100, 100 },
+	Collisionbox = {7,20,79,79},
+	Immune = true,
+	Health = 300,
+	Damage = 10,
+	DamageTicks = 100, -- milliseconds
+	Friktion = 2, -- 1 - 9 :: higher value = slower
+	JumpAcceleration = 15,
+	Animations = {
+	    DEATH = { -- Dont change name if you dont know what you're doin...
+		Spritesheet = "imgs/block_fire_dies.png",
+		FramePositions = { 0,0, 100,0, 200,0, 300,0 ,400,0, 500,0, 600,0, 700,0 },
+		FrameSize = { 100, 300 },
+		ScreenSize = {0,0,100,300},
+		Delay = 100, -- Millisekunder
+		DoOnce = true,
+		},
+	},
+    },
+    
+    GRASS = {
+	Spritesheet = "imgs/block_grass.png",
+	Size = { 100, 100 },
+	Collisionbox = {7,20,79,79},
+	Immune = true,
+	Health = 300,
+	Damage = 0,
+	DamageTicks = 100, -- milliseconds
+	Friktion = 2, -- 1 - 9 :: higher value = slower
+	JumpAcceleration = 10,
+	Animations = {
+	    DEATH = { -- Dont change name if you dont know what you're doin...
+		Spritesheet = "imgs/block_fire_dies.png",
+		FramePositions = { 0,0, 100,0, 200,0, 300,0 ,400,0, 500,0, 600,0, 700,0 },
+		FrameSize = { 100, 300 },
+		ScreenSize = {0,0,100,300},
+		Delay = 100, -- Millisekunder
+		DoOnce = true,
+	    },
+	},
+    },
+    
+    TETRIS_PURPLE = {
+	Spritesheet = "imgs/tetris_purple.png",
+	Size = { 70, 70 },
+	Collisionbox = {0,0,70,70},
+	Immune = true,
+	Health = 300,
+	Damage = 0,
+	DamageTicks = 100, -- milliseconds
+	Friktion = 2, -- 1 - 9 :: higher value = slower
+	JumpAcceleration = 15,
+	Animations = {
+	    DEATH = { -- Dont change name if you dont know what you're doin...
+		Spritesheet = "imgs/block_fire_dies.png",
+		FramePositions = { 0,0, 100,0, 200,0, 300,0 ,400,0, 500,0, 600,0, 700,0 },
+		FrameSize = { 100, 300 },
+		ScreenSize = {0,0,100,300},
+		Delay = 100, -- Millisekunder
+		DoOnce = true,
+	    },
+	},
+    },tetris_purple
     --
     --GRASS = {
     --

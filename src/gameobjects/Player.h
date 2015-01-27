@@ -19,7 +19,9 @@ class Player : public MovingGameObject
     
   Player( Rect r, Rect c, std::string texturePath, int uniqueID , bool immune, int health, int damage, Projectile* currentProjectile);
   
-  void Init();
+  void Init(Point startpos, int uniquetag);
+  
+  void Reset();
   
   void HandleCollision(GameObject* otherObject) override;
   
@@ -27,10 +29,6 @@ class Player : public MovingGameObject
   
   void Draw(Renderer* renderer);
   void renderPistol(Renderer* renderer);
-  
-  void Clean();
-  
-  void Reset();
   
   void movement_left();
   void movement_right();
@@ -45,8 +43,6 @@ class Player : public MovingGameObject
   
   void HandleAcceleration(GameObject* otherObject);
   
-  Point getStartPoint() const { return m_start_pos; }
-  
   ObjectType getType() { return GameObject::PLAYER; }
   
   private:
@@ -57,8 +53,6 @@ class Player : public MovingGameObject
   bool m_doubleJump_used;
   Point pistolHole;
   Point cameraAdjustment;
-  
-  const Point m_start_pos;
   
   float m_angle;
   

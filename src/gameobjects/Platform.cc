@@ -15,9 +15,13 @@ Platform::Platform( Rect r, Rect c, std::string texturePath, int uniqueID,
 }
 
 
-void Platform::Init()
+void Platform::Init(Point startpos, int uniquetag)
 {
-  
+  StaticGameObject::Init(startpos, uniquetag);
+}
+
+void Platform::Reset(){
+  StaticGameObject::Reset();
 }
 
 void Platform::HandleCollision(GameObject* otherObject)
@@ -55,16 +59,6 @@ void Platform::Draw(Renderer* renderer)
   StaticGameObject::Draw(renderer);
   
 }
-
-void Platform::Clean()
-{
-  
-}
-
-void Platform::Reset(){
-  StaticGameObject::Reset();
-}
-
 
 GameObject* Platform::Clone(){
   GameObject* newPlatform = new Platform(*this);

@@ -14,15 +14,13 @@ class StaticGameObject : public GameObject
   public:
     StaticGameObject() = delete;
   
-    void Init();
+    void Init(Point startpos, int uniquetag);
     
     void HandleCollision(GameObject* otherObject);
     
     void Update();
     
     virtual void Draw(Renderer* renderer);
-    
-    void Clean();
     
     virtual void Reset();
     

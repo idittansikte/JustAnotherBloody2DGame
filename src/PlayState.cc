@@ -2,6 +2,7 @@
 #include "PauseState.h"
 
 #include "InputDefinition.h"
+#include "Level.h"
 
 
 PlayState PlayState::m_PlayState;
@@ -74,6 +75,13 @@ void PlayState::Draw(Game* game, Renderer* renderer)
 {
 
   m_Level->Draw(renderer);
-  //Sprite::Draw(game->getScreen(), playSprite, 0, 0);
-  //SDL_Flip(game->getScreen());
+  DrawCursor(renderer);
+}
+
+
+void PlayState::DrawCursor(Renderer* renderer){
+  Point camAdj = renderer->getCameraAdjustment();
+  Rect A(Input::getInstance()->get_mouse_x()-10 + camAdj.x, Input::getInstance()->get_mouse_y()-10 + camAdj.y, 20, 20 );
+  renderer->drawTexture(A, "imgs/aim.png", true);
+  renderer->DisableCursor(true);
 }

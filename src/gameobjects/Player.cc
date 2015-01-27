@@ -12,15 +12,21 @@ Player::Player( Rect r, Rect c, std::string texturePath, int uniqueID , bool imm
   m_currentProjectile(currentProjectile),
   m_jump_start_velocity(12.0),
   m_want_jump(false),
-  m_doubleJump_used(false),
-  m_start_pos(Point(r.x, r.y))
+  m_doubleJump_used(false)
   {
     m_bar->setBarBox(Rect( -10, -10, 70, 4));
   }
 
-void Player::Init()
+void Player::Init(Point startpos, int uniquetag)
 {
+  MovingGameObject::Init(startpos, uniquetag);
+}
+
+void Player::Reset(){
+  MovingGameObject::Reset();
   
+  m_want_jump=false;
+  m_doubleJump_used=false;
 }
 
 void Player::HandleCollision(GameObject* otherObject)
@@ -61,19 +67,6 @@ void Player::Draw(Renderer* renderer)
   }
   
   GameObject::Draw(renderer);
-}
-
-void Player::Clean()
-{
-  
-}
-
-void Player::Reset(){
-  MovingGameObject::Reset();
-  
-  m_want_jump=false;
-  m_doubleJump_used=false;
-  updatePos(m_start_pos);
 }
 
 void Player::movement_left(){
@@ -169,13 +162,13 @@ void Player::renderPistol(Renderer* renderer){
 
 void Player::HandleAcceleration(GameObject* otherObject){
   
-  if (otherObject->getType() == PLATFORM){
+  if (contactBottom && otherObject->getType() == PLATFORM){
     Platform* pl = dynamic_cast<Platform*>(otherObject);
     float temp = pl->getFriktion();
-    m_ground_friktion = temp/10;
+    m_ground_friktion = temp/10.0;
     m_ground_jumpacceleration = pl->getJumpAcceleration();
   }
-  else if (otherObject->getType() != PROJECTILE)
+  else if ( contactBottom )
     m_ground_friktion = 5;
   
 }
