@@ -8,11 +8,13 @@
 #include "gameobjects/GameObjectManager.h"
 #include "gameobjects/GameObject.h"
 #include "gameobjects/Enemy.h"
+#include "Input.h"
+#include "editor/EditorEvent.h"
 
+#include <SDL2/SDL.h>
 #include <cmath>
 #include <algorithm>
 #include <fstream>
-//#include <utility>
 
 #include <iostream>
 
@@ -32,6 +34,7 @@ EditorState::EditorState()
     m_selected_listobject = nullptr;
     m_player.second = nullptr;
     m_selected_layer = 3;
+    m_handle_event = new EditorEvent();
 }
 
 EditorState::~EditorState()
@@ -61,159 +64,76 @@ void EditorState::Resume()
 
 void EditorState::HandleEvents(Game* game){
     
-  if( Input::getInstance()->get_quit() )
-      game->Quit();
-      
-  if(Input::getInstance()->is_key_pressed(KEY_ESCAPE))
-      game->ChangeState(MenuState::Instance());
-      
+    m_handle_event->Quit(game);
+	
+    m_handle_event->QuitEditor(game);
+	
+    m_handle_event->Scroll(m_camera_position);
+    
     if(Input::getInstance()->ctrl() && Input::getInstance()->is_key_pressed(KEY_S))
 	Save();
-	
-    // Scrolling throug map...
-    if( Input::getInstance()->is_key_pressed(KEY_SPACE)){
-	// Calculate the diffrence between last frames mouse pos and this frame
-	m_camera_movement.x = m_camera_movement.x - Input::getInstance()->get_mouse_x();
-	m_camera_movement.y = m_camera_movement.y - Input::getInstance()->get_mouse_y();
-	// Add the diffrence to the next camerapos
-	m_camera_position.x -= m_camera_movement.x;
-	m_camera_position.y -= m_camera_movement.y;
-	// Set the current mousepos for the next frame
-	m_camera_movement.x = Input::getInstance()->get_mouse_x();
-	m_camera_movement.y = Input::getInstance()->get_mouse_y();
-	return;
-    }else{ // Set current mousepos if we want to scroll next frame
-	m_camera_movement.x = Input::getInstance()->get_mouse_x();
-	m_camera_movement.y = Input::getInstance()->get_mouse_y();
-    }
     
-    // Handle layer keys
-    if(Input::getInstance()->is_key_down(KEY_1)){
-	ChangeLayer(1);
-    }
-    else if(Input::getInstance()->is_key_down(KEY_2)){
-	ChangeLayer(2);
-    }
-    else if(Input::getInstance()->is_key_down(KEY_3)){
-	ChangeLayer(3);
-    }
-    else if(Input::getInstance()->is_key_down(KEY_4)){
-	ChangeLayer(4);
-    }
-    else if(Input::getInstance()->is_key_down(KEY_5)){
-	ChangeLayer(5);
-    }
+    m_handle_event->Layer(this);
     
     // Remove last added object
     if(Input::getInstance()->ctrl() && Input::getInstance()->is_key_down(KEY_Z) && Input::getInstance()->is_key_pressed(KEY_Z) ){
 	RemoveLastAdded();
     }
     
-    // Handle left mouse key inside right menu
-    if(Input::getInstance()->is_mouse_down(MOUSE_LEFT)){
-	if(Input::getInstance()->is_mouse_inside(m_backgoundBox))
-	{	// Handle tool selection
-	    if(Input::getInstance()->is_mouse_inside(m_toolBox) && m_toolBoxes.size() != 0 ){
-		for(auto it : m_toolBoxes){
-		    if(Input::getInstance()->is_mouse_inside(it.first)){
-			if(m_selected_listobject != nullptr)
-			    RemoveSelectedObject();
-			m_selected_tool = it.second;
-			
-		    }
-		}
-	    }	// Handle list selection if "ADD" tool is selected
-	    else if(Input::getInstance()->is_mouse_inside(m_sel_list_box) && m_sel_list_boxes.size() != 0 ){
-		for(auto it : m_sel_list_boxes){
-		    if(Input::getInstance()->is_mouse_inside(it.first)){
-			if(m_selected_listobject != nullptr)
-			    RemoveSelectedObject();
-			m_selected_list = it.second;
-			
-		    }
-		}
-	    }	// Handle object selection if "ADD" tool and "list" is selected
-	    else if(Input::getInstance()->is_mouse_inside(m_listBox) && m_ListBoxes.size() != 0 ){
+    ButtonType tool = m_handle_event->MenuButtonSelection<ButtonType>( m_backgoundBox, m_toolBox, m_toolBoxes );
+    if( tool != NONE ){
+	m_selected_tool = tool;
+    }
     
-		if(m_selected_list != NONE ){
-		    for(auto it : m_ListBoxes){
-			if(Input::getInstance()->is_mouse_inside(it.first)){
-			    AddObject(it.second);
-			    break;
-			}
-		    }
-		}
+    ButtonType list = m_handle_event->MenuButtonSelection<ButtonType>( m_backgoundBox, m_sel_list_box, m_sel_list_boxes );
+    if( list != NONE ){
+	m_selected_list = list;
+    }
+    GameObject* tmp_selected = m_handle_event->MenuButtonSelection<GameObject*>( m_backgoundBox, m_listBox, m_ListBoxes );
+    if( tmp_selected != nullptr ){
+	if(m_selected_listobject != nullptr)
+	    RemoveSelectedObject();
+	m_selected_listobject = AddObject(tmp_selected);
+    }
+
+    if( Input::getInstance()->is_mouse_inside( m_levelWindow ) ){ // Handle events in level(ex. outside of right menu)
+	if( Input::getInstance()->is_mouse_down(MOUSE_LEFT) ){  // Handle left mouse key inside right-menu
+	    switch(m_selected_tool){
+		case ADD:
+		    m_handle_event->ReleaseObjectFromMouse( m_selected_listobject, m_selected_tool );
+		break;
+		case DELETE:
+		    RemoveObject( m_handle_event->GetObjectOnMouse( m_selected_layer, m_level.GetEditorList() ) );
+		break;
+		case MARK:
+		case MOVE:
+		    if(m_selected_listobject == nullptr)
+			m_selected_listobject = m_handle_event->GetObjectOnMouse( m_selected_layer, m_level.GetEditorList() );
+		break;
 	    }
-	} // END OF INSIDE RIGHT MENU
+	}// END OF LEFT MOUSECLICK DOWN
 	
-	// Handle events in level(ex. outside of right menu)
-	if(Input::getInstance()->is_mouse_inside(m_levelWindow)){
-		// Handle if "ADD" tool selected
-	    if(m_selected_tool == ADD){
-	    	if(m_selected_listobject != nullptr ){
-		    if(m_selected_listobject->getType() != GameObject::PLAYER ){
-			GameObject* keeper = m_selected_listobject->Clone();
-			m_selected_listobject = nullptr;
-			AddObject(keeper);
-		    }
-		    else{
-			m_selected_listobject = nullptr;
-		    }
-	    	}
+	if( Input::getInstance()->is_mouse_pressed(MOUSE_LEFT) ){
+	   switch(m_selected_tool){
+		case MARK:
+		    ;
+		break;
+	    	case MOVE:
+		    ;
+		break;
 	    }
-	    else if(m_selected_tool == MARK){
-		if( m_selected_listobject == nullptr ){
-		    std::pair<int, GameObject*> selected = GetListPairOnMouse();
-		    if(selected.second->getType() == GameObject::ENEMY ){
-			m_selected_listobject = selected.second;
-		    }
-		}
-		else{
-		    m_selected_listobject = nullptr;
-		}
-	    }	//Handle if "DELETE" tool selected
-	    else if(m_selected_tool == DELETE){
-		std::pair<int, GameObject*> pr = GetListPairOnMouse();
-		if( pr.second != nullptr ){
-		    std::cout << "HandleEvent::WINDOW::MOUSECLICK::Removing\n"; 
-		    RemoveObject( pr.second );
-		}
-	    }	//Handle if "MOVE" tool selected
-	    else if(m_selected_tool == MOVE){
-		if(m_selected_listobject == nullptr){
-		    std::pair<int, GameObject*> pr = GetListPairOnMouse();
-		    if( pr.second != nullptr ){
-			m_selected_listobject = pr.second;
-			m_selected_layer = pr.first;
-		    }
-		}
-		else{
-		    m_selected_listobject = nullptr; // drop seleced object
-		    //m_selected_layer = 3;
-		}
+	}
+	else{ // IF LEFT MOUSE NOT PRESSED
+	    switch(m_selected_tool){
+		case MARK:
+		case MOVE:
+		    m_handle_event->ReleaseObjectFromMouse( m_selected_listobject );
+		break;
 	    }
-	    
-	} // END OF INSIDE LEVELWINDOW
-	
-    }// END OF LEFT MOUSECLICK 
+	}
+    } // END OF INSIDE LEVELWINDOW
 
 } // HandleEvents END
-
-std::pair<int, GameObject*> EditorState::GetListPairOnMouse(){
-    // I'm using reverse_iterator because if items are stacked on each other I want the top layer object. Therefore I search outside and in...
-    std::pair<int, GameObject*> p( -1, nullptr );
-    std::multimap<int, GameObject*>* List = m_level.GetEditorList();
-    std::multimap<int, GameObject*>::reverse_iterator rit;
-    for(rit = List->rbegin() ; rit != List->rend() ; ++rit){
-	if( Input::getInstance()->is_mouse_inside( rit->second->getRect() ) ){
-	    p.first = rit->first;
-	    p.second = rit->second;
-	    return p;
-	    break;
-	}
-    }
-    return p;
-}
 
 void EditorState::Update(Game* game)
 {
@@ -221,15 +141,14 @@ void EditorState::Update(Game* game)
     UpdateStaticMenu();
     UpdateSelectedObjectList();
     if( m_selected_tool == MARK && m_selected_listobject != nullptr ){
-	std::cout << m_selected_listobject->GetName() << " yo\n";
 	Enemy* enemy = dynamic_cast<Enemy*>(m_selected_listobject);
 	Rect A = enemy->getRect();
 	Point mousepos( Input::getInstance()->get_mouse_x(), Input::getInstance()->get_mouse_y() );
-	if( mousepos.x < (A.x+A.w)/2 ){ // LEFT SIDE
-	    enemy->SetMaxMovementLeft(mousepos.x);
+	if( mousepos.x < A.x + A.w/2 ){ // LEFT SIDE
+	    enemy->SetMaxMovementRight(-mousepos.x);
 	}
 	else{
-	    enemy->SetMaxMovementRight(mousepos.x);
+	    enemy->SetMaxMovementLeft(-mousepos.x);
 	}
     }
     else if(m_selected_listobject != nullptr){
@@ -486,7 +405,7 @@ void EditorState::DrawMovingObjectArea(Renderer* renderer){
 	    a.h = e.h - 30;
 	    a.w = enemy->GetMaxMovementLeft();
 	    renderer->drawTexture(a, "imgs/editor/greenarrow.png", true, Rect(), true);
-	    a.x = e.x + a.w;
+	    a.x = e.x + e.w;
 	    a.y = e.y + 30;
 	    a.h = e.h - 30;
 	    a.w = enemy->GetMaxMovementRight();
@@ -511,7 +430,7 @@ void EditorState::DrawCursor(Renderer* renderer){
 	else {//(m_selected_tool == MOVE){
 	    img = "imgs/editor/move.png";
 	}
-	Rect A(Input::getInstance()->get_mouse_x()-10, Input::getInstance()->get_mouse_y()-10, 20, 20 );
+	Rect A(Input::getInstance()->get_mouse_x()-10+renderer->getCameraAdjustment().x, Input::getInstance()->get_mouse_y()-10+renderer->getCameraAdjustment().y, 20, 20 );
 	renderer->drawTexture(A, img, true, Rect(), true);
     }
     else{
@@ -565,9 +484,9 @@ int EditorState::GetButtonSize(int width, int height, int tileCount)
     return tileSize;
 } // GetButtonSize() END
 
-void EditorState::AddObject(GameObject* object){
-    if(m_selected_listobject != nullptr)
-	RemoveSelectedObject();
+GameObject* EditorState::AddObject(GameObject* object){
+//    if(m_selected_listobject != nullptr)
+//	RemoveSelectedObject();
     
     GameObject* newobject =  object->Clone();
     
@@ -581,7 +500,7 @@ void EditorState::AddObject(GameObject* object){
     }
     
     m_lastAddedObjects.push_back( m_level.GetEditorList()->emplace(m_selected_layer,newobject) );
-    m_selected_listobject = m_lastAddedObjects.back()->second;
+    return m_lastAddedObjects.back()->second;
 } // AddObject() END
 
 void EditorState::ChangeLayer(int newLayer){
@@ -618,6 +537,8 @@ void EditorState::RemoveSelectedObject(){
 }
 
 void EditorState::RemoveObject(GameObject* object){
+    if(object == nullptr)
+	return;
 
     if( m_player.second == object ){
 	m_player.second = nullptr;
@@ -714,5 +635,5 @@ void EditorState::UpdateCamera(){
 	m_camera_position.y = m_currentWindowSize.h/2;
     
     // Update Camera
-    m_level.SetCamera(m_camera_position);
+    m_level.SetCamera( Rect(m_camera_position.x, m_camera_position.y,0,0) );
 }

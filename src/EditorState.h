@@ -1,20 +1,19 @@
 #ifndef EDITORSTATE_H
 #define EDITORSTATE_H
 
-#include <SDL2/SDL.h>
 #include <vector>
 #include <map>
 
-
 #include "GameState.h"
 #include "Renderer.h"
-#include "Input.h"
+
 #include "Rect.h"
 #include "Point.h"
 #include "Level.h"
 
 class GameObject;
 class Player;
+class EditorEvent;
 
 class EditorState : public GameState
 {
@@ -45,7 +44,7 @@ class EditorState : public GameState
     void DrawMovingObjectArea(Renderer* renderer);
     void DrawCursor(Renderer* renderer);
     
-    void AddObject(GameObject*);
+    GameObject* AddObject(GameObject*);
     
     void ChangeLayer(int newLayer);
     
@@ -106,8 +105,9 @@ class EditorState : public GameState
     Point m_mousePos;
     const int m_gridSize{10};
     
-    Rect m_camera_position;
-    Point m_camera_movement;
+    Point m_camera_position;
+    
+    EditorEvent* m_handle_event;
     
 };
 

@@ -53,6 +53,8 @@ class Input
     bool m_key_up[KEYBOARD_SIZE];
     bool m_mouse_down[MOUSE_MAX];
     bool m_mouse_up[MOUSE_MAX];
+    
+    bool m_mouse_pressed[MOUSE_MAX];
 
     bool m_quit;
 };

@@ -37,6 +37,7 @@ class Level
   Player* getPlayer(){ return m_Player; }
   
   void SetCamera(Rect campos);
+  Rect GetCameraPos(){ return m_camera_position; }
   void UpdateCamera(Renderer* renderer);
   
   private:

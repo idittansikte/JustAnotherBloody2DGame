@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#include <iostream>
+
 Input* Input::instance = nullptr;
 
 Input::Input():
@@ -81,15 +83,36 @@ void Input::update(int cameraX, int cameraY)
         {
           this->m_mouse = SDL_GetMouseState(&(this->m_mouse_x), &(this->m_mouse_y));
           
-          if (event.button.button == SDL_BUTTON_LEFT)
+          if (event.button.button == SDL_BUTTON_LEFT){
             m_mouse_down[MOUSE_LEFT] = true;
-          else if (event.button.button == SDL_BUTTON_RIGHT)
+            m_mouse_pressed[MOUSE_LEFT] = true;
+          }
+          else if (event.button.button == SDL_BUTTON_RIGHT){
             m_mouse_down[MOUSE_RIGHT] = true;
+            m_mouse_pressed[MOUSE_RIGHT] = true;
+          }
+          else if( event.button.button == SDL_BUTTON_MIDDLE ){
+            m_mouse_pressed[MOUSE_WHEEL] = true;
+          }
         }
         break;
-      
+      case SDL_MOUSEBUTTONUP:
+        {
+          if( event.button.button == SDL_BUTTON_LEFT ){
+              m_mouse_pressed[MOUSE_LEFT] = false;
+          }
+          else if( event.button.button == SDL_BUTTON_LEFT ){
+              m_mouse_pressed[MOUSE_RIGHT] = false;
+          }
+          else if(event.button.button == SDL_BUTTON_MIDDLE){
+              m_mouse_pressed[MOUSE_WHEEL] = false;
+          }
+        }
+        break;
       case SDL_MOUSEWHEEL:
         {
+          //if( event.button.button == SDL_BUTTON_MIDDLE)
+          //  m_mouse_pressed[MOUSE_WHEEL] == true;
           // NO USE YET  
         }
         break;
@@ -165,13 +188,20 @@ bool Input::is_mouse_pressed(MouseButton button)
   switch (button)
   {
     case MOUSE_LEFT:
-      if (this->m_mouse & SDL_BUTTON(1))
+      if (m_mouse_pressed[MOUSE_LEFT]){
        return true;
+      }
     break;
-  
     case MOUSE_RIGHT:
-      if (this->m_mouse & SDL_BUTTON(3))
-        return true;
+      if (m_mouse_pressed[MOUSE_RIGHT]){
+       return true;
+      }
+    break;
+    case MOUSE_WHEEL:
+      if (m_mouse_pressed[MOUSE_WHEEL]){
+        std::cout <<  "true\n";
+       return true;
+      }
     break;
   
     default:
