@@ -13,8 +13,8 @@ class Enemy : public MovingGameObject
   public:
     
   Enemy(
-	Rect r,
-	Rect c,
+	Rect<int> r,
+	Rect<int> c,
 	std::string texturePath,
 	int uniqueID,
 	bool immune,

@@ -13,7 +13,7 @@ PlayState::PlayState():
 
 void PlayState::Init()
 {
-  m_Level = new Level();
+  m_Level = new Level("Level.dat");
   m_Level->Init();
   //playSprite = Sprite::Load("");
   printf("PlayState Init Successful\n");
@@ -81,7 +81,7 @@ void PlayState::Draw(Game* game, Renderer* renderer)
 
 void PlayState::DrawCursor(Renderer* renderer){
   Point camAdj = renderer->getCameraAdjustment();
-  Rect A(Input::getInstance()->get_mouse_x()-10 + camAdj.x, Input::getInstance()->get_mouse_y()-10 + camAdj.y, 20, 20 );
+  Rect<int> A(Input::getInstance()->get_mouse_x()-10 + camAdj.x, Input::getInstance()->get_mouse_y()-10 + camAdj.y, 20, 20 );
   renderer->drawTexture(A, "imgs/aim.png", true);
   renderer->DisableCursor(true);
 }

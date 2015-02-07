@@ -13,8 +13,8 @@ class Projectile : public MovingGameObject
   public:
     
   Projectile(
-	Rect r,
-	Rect c,
+	Rect<int> r,
+	Rect<int> c,
 	std::string texturePath,
 	int uniqueID,
 	int distance,

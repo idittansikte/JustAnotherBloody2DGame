@@ -24,31 +24,31 @@ void MovingGameObject::Reset(){
 
 bool MovingGameObject::collidedFromLeft(GameObject* otherObject)
 {
-  Rect A = this->getCollisionRect();
-  Rect B = otherObject->getCollisionRect();
+  Rect<int> A = this->getCollisionRect();
+  Rect<int> B = otherObject->getCollisionRect();
     return m_previous_position.x + A.w <= B.x && // was not colliding
            A.x + A.w > B.x;
 }
 
 bool MovingGameObject::collidedFromRight(GameObject* otherObject)
 {
-  Rect A = this->getCollisionRect();
-  Rect B = otherObject->getCollisionRect();
+  Rect<int> A = this->getCollisionRect();
+  Rect<int> B = otherObject->getCollisionRect();
     return m_previous_position.x >= B.x + B.w && // was not colliding
            A.x < B.x + B.w;
 }
 
 bool MovingGameObject::collidedFromTop(GameObject* otherObject)
 {
-  Rect A = this->getCollisionRect();
-  Rect B = otherObject->getCollisionRect();
+  Rect<int> A = this->getCollisionRect();
+  Rect<int> B = otherObject->getCollisionRect();
     return m_previous_position.y + A.h <= B.y && // was not colliding
            A.y + A.h > B.y;
 }
 
 bool MovingGameObject::collidedFromBottom(GameObject* otherObject){
-  Rect A = this->getCollisionRect();
-  Rect B = otherObject->getCollisionRect();
+  Rect<int> A = this->getCollisionRect();
+  Rect<int> B = otherObject->getCollisionRect();
     return m_previous_position.y >= B.y + B.h && // was not colliding
            A.y < B.y + B.h;
 }
@@ -61,8 +61,8 @@ void MovingGameObject::HandleCollision(GameObject* otherObject)
   
   if ( this->getType() != GameObject::PROJECTILE && otherObject->getType() != GameObject::PROJECTILE ){
     
-      Rect A = this->getCollisionRect();
-      Rect B = otherObject->getCollisionRect();
+      Rect<int> A = this->getCollisionRect();
+      Rect<int> B = otherObject->getCollisionRect();
       
     if ( collidedFromTop(otherObject) ){ //Collied  top
       m_previous_position.y = B.y-A.h;
@@ -145,7 +145,7 @@ void MovingGameObject::Draw(Renderer* renderer)
 }
 
 void MovingGameObject::apply_velocity_x(float x_){
-  Rect A = this->getCollisionRect();
+  Rect<int> A = this->getCollisionRect();
   int x = round(x_);
   
   this->m_previous_position.x = A.x ;
@@ -153,7 +153,7 @@ void MovingGameObject::apply_velocity_x(float x_){
 }
 
 void MovingGameObject::apply_velocity_y(float y_){
-  Rect A = this->getCollisionRect();
+  Rect<int> A = this->getCollisionRect();
   int y = round(y_);
   
   this->m_previous_position.y = A.y;

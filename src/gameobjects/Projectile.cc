@@ -4,8 +4,8 @@
 #include <cmath>
 
 Projectile::Projectile(
-	Rect r,
-	Rect c,
+	Rect<int> r,
+	Rect<int> c,
 	std::string texturePath,
 	int uniqueID,
 	int distance,
@@ -45,7 +45,7 @@ void Projectile::HandleCollision(GameObject* otherObject){
 
 void Projectile::Update(){
   
-  Rect pos = this->getRect();
+  Rect<int> pos = this->getRect();
   // Calculate distance between now and startpos
   double distance = sqrt( (pos.x - m_startPos.x)*(pos.x - m_startPos.x) + (pos.y - m_startPos.y)*(pos.y - m_startPos.y) );
 
@@ -65,11 +65,11 @@ void Projectile::Update(){
 
 void Projectile::Draw(Renderer* renderer){
   
-  Rect pos = this->getRect();
+  Rect<int> pos = this->getRect();
   Point centerSize(pos.w/2, pos.h/2);
   
   if(!isDead()){
-    renderer->drawTexture( pos, this->getTexturePath(), true, Rect(), false, false, centerSize, m_angle );
+    renderer->drawTexture( pos, this->getTexturePath(), true, Rect<int>(), false, false, centerSize, m_angle );
   }
   else{
     GetAnimation("DEATH")->DrawCurrentFrame(renderer, getRect());

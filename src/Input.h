@@ -15,6 +15,8 @@ class Input
     
     static Input* getInstance();
     
+    void ResetClicks();
+    
     void update(int cameraX = 0, int cameraY = 0);
     
     bool is_key_down(int key);
@@ -36,7 +38,7 @@ class Input
     
     bool get_quit();
     
-    bool is_mouse_inside(Rect rectangle);
+    bool is_mouse_inside(Rect<int> rectangle);
 
   private:
     

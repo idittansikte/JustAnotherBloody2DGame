@@ -19,7 +19,7 @@ public:
   
   void CleanGrid();
   
-  void AddToGrid(multimap<int, GameObject*> ObjectList, Point center, Rect screenSize, bool update_only_visable = true);
+  void AddToGrid(multimap<int, GameObject*> ObjectList, Point center, Rect<int> screenSize, bool update_only_visable = true);
   
   vector<pair<GameObject*, GameObject*>> getColliedPairs(Collision* otherList = nullptr);
   

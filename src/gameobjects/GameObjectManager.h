@@ -17,7 +17,7 @@ class GameObject;
 
 struct Variables{
     std::string spritesheet, projectilename, name = "";
-    Rect size, collisionbox, framesize, screensize;
+    Rect<int> size, collisionbox, framesize, screensize;
     bool immune, doonce, ranger, gravity, targetplayer;
     int health, damage, damageticks, friktion, jumpacceleration, distance;
     int delay, intervall, aggrodistance;

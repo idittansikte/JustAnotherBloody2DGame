@@ -27,7 +27,7 @@ class StaticGameObject : public GameObject
     virtual ObjectType getType() = 0;
   
   protected:
-    StaticGameObject( Rect r, Rect c, std::string texturePath , int uniqueID, bool immune, int health, int damage)
+    StaticGameObject( Rect<int> r, Rect<int> c, std::string texturePath , int uniqueID, bool immune, int health, int damage)
       : GameObject(r, c, texturePath, uniqueID, immune, health, damage)
     {}
   

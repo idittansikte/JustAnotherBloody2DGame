@@ -17,7 +17,7 @@ class Player : public MovingGameObject
 {
   public:
     
-  Player( Rect r, Rect c, std::string texturePath, int uniqueID , bool immune, int health, int damage, Projectile* currentProjectile);
+  Player( Rect<int> r, Rect<int> c, std::string texturePath, int uniqueID , bool immune, int health, int damage, Projectile* currentProjectile);
   
   void Init(Point startpos, int uniquetag);
   

@@ -11,7 +11,6 @@
 #include <vector>
 
 class Game;
-class EditorState;
 
 class EditorEvent{
     public:
@@ -28,16 +27,16 @@ class EditorEvent{
 	void RemoveLastAddedObject(EditorState* editor);
 	
 	template<typename T>
-	T MenuButtonSelection( const Rect &menuBox, const Rect &outerBox, const std::vector< std::pair<Rect, T> > &buttonBoxes );
+	T MenuButtonSelection( const Rect<int> &menuBox, const Rect<int> &outerBox, const std::vector< std::pair<Rect<int>, T> > &buttonBoxes );
 	
 	template<typename T>
 	T GetDefault();
 	
 	void ReleaseObjectFromMouse( GameObject* &selected_object, EditorState::ButtonType tool = EditorState::NONE);
 	
-	GameObject* GetObjectOnMouse(  int &selected_layer, std::multimap<int, GameObject*>* level_list);
+	//GameObject* GetObjectOnMouse(  int &selected_layer, std::multimap<int, GameObject*>* level_list);
 	
-	std::pair<int, GameObject*> GetLevelObjectOnMouse( std::multimap<int, GameObject*>* level_list) ;
+	GameObject* GetLevelObjectOnMouse( std::multimap<int, GameObject*>* level_list) ;
 	
 	void LeftMouseClick(EditorState*);
 	
@@ -49,7 +48,7 @@ class EditorEvent{
 
 
 template<typename T>
-T EditorEvent::MenuButtonSelection( const Rect &menuBox, const Rect &outerBox, const std::vector< std::pair<Rect, T> > &buttonBoxes){
+T EditorEvent::MenuButtonSelection( const Rect<int> &menuBox, const Rect<int> &outerBox, const std::vector< std::pair<Rect<int>, T> > &buttonBoxes){
     T found = GetDefault<T>();
     if(Input::getInstance()->is_mouse_down(MOUSE_LEFT)){
 	if(Input::getInstance()->is_mouse_inside(menuBox))

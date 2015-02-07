@@ -3,13 +3,13 @@
 #include <cmath>
 
 
-Platform::Platform( Rect r, Rect c, std::string texturePath, int uniqueID,
+Platform::Platform( Rect<int> r, Rect<int> c, std::string texturePath, int uniqueID,
 		   bool immune, int health, int damage, int damageTicks, int friktion, int jumpAcceleration)
   : StaticGameObject(r, c, texturePath, uniqueID, immune, health, damage), m_damageTicks(damageTicks), m_friktion(friktion),
   m_jumpAcceleration(jumpAcceleration)
 
 {
-    m_bar->setBarBox(Rect( 10, 40, 60, 4));
+    m_bar->setBarBox(Rect<int>( 10, 40, 60, 4));
     if( this->getDamage() > 0 )
       m_damagetimer.start();
 }

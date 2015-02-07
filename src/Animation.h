@@ -16,7 +16,7 @@
 class Animation : public Sprite {
     
     public:
-	Animation(std::string filename, std::vector<Point> framePositions, Rect frameSize, Rect screensize, int delay, bool onlyOnce);
+	Animation(std::string filename, std::vector<Point> framePositions, Rect<int> frameSize, Rect<int> screensize, int delay, bool onlyOnce);
 	
 	~Animation();
 	
@@ -24,7 +24,7 @@ class Animation : public Sprite {
 	
 	void Update();
 	
-	void DrawCurrentFrame(Renderer* renderer, Rect boxToFill, bool flipHorisontal = false);
+	void DrawCurrentFrame(Renderer* renderer, Rect<int> boxToFill, bool flipHorisontal = false);
 	
 	void Next();
 	
@@ -39,8 +39,8 @@ class Animation : public Sprite {
 	
 	std::vector<Point> m_framePositions;
 	
-	Rect m_frameSize;
-	Rect m_screenSize;
+	Rect<int> m_frameSize;
+	Rect<int> m_screenSize;
 	
 	std::vector<Point>::iterator m_currentFramePos;
 	

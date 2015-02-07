@@ -18,14 +18,16 @@
 class Platform;
 class GameObjectManager;
 
-Level::Level():
+Level::Level(std::string map_path):
   m_iWorldWidth(4000),
   m_iWorldHeight(4000)
 {
   //GameObjectManager::Instance()->loadGameObjectsFromFile();
   
-  std::string levelname = "Level.dat";
-  Load(levelname);
+  if(!map_path.empty() )
+    Load(map_path);
+  
+  m_Player = nullptr;
   
   m_StaticColliesGrid = new Collision( m_iWorldWidth, m_iWorldHeight );
   m_MovingColliesGrid = new Collision( m_iWorldWidth, m_iWorldHeight );
@@ -107,29 +109,6 @@ std::multimap<int,GameObject*>* Level::GetEditorList(){
   return &m_vEditorList;
 }
 
-void Level::AddObject(int layer, GameObject* object){
-  if(object->getType() == GameObject::PLAYER || object->getType() == GameObject::ENEMY){
-    if(object->getType() == GameObject::PLAYER){
-      m_Player = dynamic_cast<Player*>(object);
-      m_vMovingGameObjects.insert( std::make_pair( layer, m_Player ) );
-    }
-    else{
-      m_vMovingGameObjects.insert( std::make_pair( layer, object ) );
-    }
-  }
-  else if(object->getType() == GameObject::PLATFORM){
-     m_vStaticGameObjects.insert( std::make_pair( layer , object ));
-  }
-  else{
-    std::cerr << "Level::AddObject: Object type does not exist\n";
-  }
-}
-
-void Level::SaveLevel()
-{
-  
-}
-
 void Level::Update()
 {
    // Cleanup last frame grid for movingsobject to make a new one.
@@ -172,10 +151,13 @@ void Level::Draw(Renderer* renderer)
 {
   //UpdateScreen Size
   m_screenSize = renderer->getWindowSize();
+  
   //Update camera to the current center of SCREEN before any other draws on map...
   if(m_Player != nullptr)
     SetCamera(m_Player->getRect());
+
   UpdateCamera(renderer);
+  
   // Draw all objects, first layer first then second...
   const int max_layers = 5;
   int current_layer = 0;
@@ -208,7 +190,7 @@ void Level::Reset(){
   }
 }
 
-void Level::SetCamera(Rect campos){
+void Level::SetCamera(Rect<int> campos){
   m_camera_position = campos;
 }
 

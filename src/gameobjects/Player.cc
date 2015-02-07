@@ -7,14 +7,14 @@
 #include <iostream>
 #include <math.h>
 
-Player::Player( Rect r, Rect c, std::string texturePath, int uniqueID , bool immune, int health, int damage, Projectile* currentProjectile) :
+Player::Player( Rect<int> r, Rect<int> c, std::string texturePath, int uniqueID , bool immune, int health, int damage, Projectile* currentProjectile) :
   MovingGameObject(r, c, texturePath, uniqueID, immune, health, damage),
   m_currentProjectile(currentProjectile),
   m_jump_start_velocity(12.0),
   m_want_jump(false),
   m_doubleJump_used(false)
   {
-    m_bar->setBarBox(Rect( -10, -10, 70, 4));
+    m_bar->setBarBox(Rect<int>( -10, -10, 70, 4));
   }
 
 void Player::Init(Point startpos, int uniquetag)
@@ -58,7 +58,7 @@ void Player::Draw(Renderer* renderer)
     if (m_current_direction == RIGHT)
       renderer->drawTexture( getRect(), getTexturePath(), true);
     else
-      renderer->drawTexture( getRect(), getTexturePath(), true, Rect(), true);
+      renderer->drawTexture( getRect(), getTexturePath(), true, Rect<int>(), true);
     renderPistol(renderer);
   }
   else{
@@ -155,9 +155,9 @@ void Player::renderPistol(Renderer* renderer){
   
   //Flip pistol if it is upsidedown
   if (m_angle < 90 && m_angle > -90)
-    renderer->drawTexture( Rect(pistolPos.x,pistolPos.y,40,40), "imgs/pistol.png", true, Rect(0,0,50,50), false, false, centerSize, m_angle );
+    renderer->drawTexture( Rect<int>(pistolPos.x,pistolPos.y,40,40), "imgs/pistol.png", true, Rect<int>(0,0,50,50), false, false, centerSize, m_angle );
   else
-    renderer->drawTexture( Rect(pistolPos.x,pistolPos.y,40,40), "imgs/pistol.png", true, Rect(0,0,50,50), false, true, centerSize, m_angle );
+    renderer->drawTexture( Rect<int>(pistolPos.x,pistolPos.y,40,40), "imgs/pistol.png", true, Rect<int>(0,0,50,50), false, true, centerSize, m_angle );
 }
 
 void Player::HandleAcceleration(GameObject* otherObject){

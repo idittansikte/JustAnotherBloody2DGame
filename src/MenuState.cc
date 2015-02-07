@@ -36,7 +36,8 @@ void MenuState::HandleEvents(Game* game)
       game->ChangeState(PlayState::Instance());
   
   if(Input::getInstance()->is_mouse_down(MOUSE_LEFT)){
-      if( Input::getInstance()->is_mouse_inside(Rect(0,0,50,50)) ){
+      if( Input::getInstance()->is_mouse_inside(Rect<int>(0,0,50,50)) ){
+        printf("EditorState CLICK\n");
 	game->ChangeState(EditorState::Instance());
       }
   }
@@ -48,5 +49,5 @@ void MenuState::Update(Game* game)
 
 void MenuState::Draw(Game* game, Renderer* renderer)
 {
-  renderer->drawTexture( Rect(0,0,renderer->getWindowSize().w, renderer->getWindowSize().h), MENU_BACKGROUND_FILEPATH, false);
+  renderer->drawTexture( Rect<int>(0,0,renderer->getWindowSize().w, renderer->getWindowSize().h), MENU_BACKGROUND_FILEPATH, false);
 }

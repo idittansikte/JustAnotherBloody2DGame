@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 
+#include "editor/Menu.h"
 #include "GameState.h"
 #include "Renderer.h"
 
@@ -14,6 +15,7 @@
 class GameObject;
 class Player;
 class EditorEvent;
+
 
 class EditorState : public GameState
 {
@@ -35,27 +37,24 @@ class EditorState : public GameState
     std::pair<int, GameObject*> GetListPairOnMouse();
     
     void Update(Game* game);
-    void UpdateStaticMenu();
-    void UpdateSelectedObjectList();
+    //void UpdateStaticMenu();
+    //void UpdateSelectedObjectList();
     
     void Draw(Game* game, Renderer* renderer);
-    void DrawStaticMenu(Renderer* renderer);
-    void DrawSelectedObjectList(Renderer* renderer);
+    //void DrawStaticMenu(Renderer* renderer);
+    //void DrawSelectedObjectList(Renderer* renderer);
     void DrawMovingObjectArea(Renderer* renderer);
     void DrawCursor(Renderer* renderer);
     
+    
     GameObject* AddObject(GameObject*);
-    
     void ChangeLayer(int newLayer);
-    
     void RemoveLastAdded();
     void RemoveObject(GameObject* object);
     void RemoveSelectedObject();
-    void RemoveIterator( std::multimap<int, GameObject*>::iterator it );
     
-    int GetButtonSize(int width, int height, int tileCount);
+    Point GetGridPos(Rect<int> box);
     
-    Point GetGridPos(Rect box);
     void UpdateCamera();
     
     static EditorState* Instance()
@@ -70,44 +69,33 @@ class EditorState : public GameState
   private:
     static EditorState m_EditorState;
     
-    Level m_level;
+    Level *m_level;
     
+    // Selections, to know what "states" that is actve;
     ButtonType m_selected_tool;
     ButtonType m_selected_list;
     GameObject* m_selected_listobject;
-    
-    std::multimap<int, GameObject*>::iterator m_it;
-    
     int m_selected_layer;
     
-    Rect m_toolBox;
-    std::vector< std::pair< Rect, ButtonType > > m_toolBoxes;
-
-    Rect m_layerBox;
-    
-    Rect m_sel_list_box;
-    std::vector< std::pair<Rect, ButtonType> > m_sel_list_boxes;
-  
-    Rect m_listBox;
-    std::vector< std::pair<Rect, GameObject*> > m_ListBoxes;
-    
-    Rect m_currentWindowSize;
-    Rect m_backgoundBox;
-    Rect m_levelWindow;
-    
-    std::vector<std::multimap<int, GameObject*>::iterator> m_lastAddedObjects;
     std::pair<int, GameObject*> m_player;
     
-    const int m_listColumns{3};
-    const int m_listRows{12};
-    std::vector<Point> m_objListButtonPos;
+    Rect<int> m_currentWindowSize;
+    Rect<int> m_rightmenubox;
+    Rect<int> m_levelWindow;
     
-    Point m_mousePos;
+    std::vector<GameObject*> m_lastAddedObjects;
+    
+    
     const int m_gridSize{10};
     
     Point m_camera_position;
     
     EditorEvent* m_handle_event;
+    
+    Menu<int> m_toolmenu{0.82,0.20,0.18,0.20};
+    Menu<int> m_listselectmenu{0.82,0.40,0.18,0.20};
+    Menu<GameObject*> m_creaturemenu{0.82,0.60,0.18,0.20};
+    Menu<GameObject*> m_platformmenu{0.82,0.60,0.18,0.20};
     
 };
 

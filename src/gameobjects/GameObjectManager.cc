@@ -19,7 +19,7 @@ GameObjectManager GameObjectManager::m_GameObjectManager;
 GameObjectManager::GameObjectManager()
 {
     m_luaScript = new LuaScript(LUA_FILEPATH);
-    loadGameObjectsFromFile();
+    //loadGameObjectsFromFile();
 }
 
 GameObjectManager::~GameObjectManager()

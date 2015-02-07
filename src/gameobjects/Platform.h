@@ -19,7 +19,7 @@ class Platform : public StaticGameObject
  
   enum State{NORMAL, DIES};
   
-  Platform( Rect r, Rect c, std::string texturePath, int uniqueID, bool immune, int health, int damage, int damageTicks,
+  Platform( Rect<int> r, Rect<int> c, std::string texturePath, int uniqueID, bool immune, int health, int damage, int damageTicks,
 	   int friktion, int m_jumpAcceleration );
   
   void Init(Point startpos, int uniquetag);

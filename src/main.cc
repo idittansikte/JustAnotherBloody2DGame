@@ -1,11 +1,12 @@
 #include "Game.h"
+#include "gameobjects/GameObjectManager.h"
 #include "MenuState.h"
 #include "GameState.h"
-
 #include <iostream>
 
 int main(int argc, char* argv[])
 {
+  GameObjectManager::Instance()->loadGameObjectsFromFile();
   Game game;
   
   game.Init();

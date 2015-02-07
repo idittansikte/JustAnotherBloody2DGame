@@ -27,9 +27,9 @@ class GameObject
     virtual void Draw(Renderer* renderer);
     
     //Objects position functions
-    Rect getRect(){ return m_rRect; }
+    Rect<int> getRect(){ return m_rRect; }
     Point getPos() { return Point(m_rRect.x, m_rRect.y); }
-    Rect getCollisionRect();
+    Rect<int> getCollisionRect();
     
     Point getCenterPos(){ return Point(m_rRect.x + (m_rRect.w/2), m_rRect.y + (m_rRect.h/2)); }
     
@@ -48,7 +48,7 @@ class GameObject
     void SetName( std::string name ){ m_objectName = name; }
     
     // Check if object should for example, be rendered or updated...
-    bool is_in_screen_range(Point screenCenter, Rect screenSize);
+    bool is_in_screen_range(Point screenCenter, Rect<int> screenSize);
     
     // Object life handling
     void setDead();
@@ -72,7 +72,7 @@ class GameObject
     virtual GameObject* Clone() = 0;
 
   protected:
-    GameObject( Rect r, Rect c, std::string texturePath, int uniqueID, bool immune, int health, int damage);
+    GameObject( Rect<int> r, Rect<int> c, std::string texturePath, int uniqueID, bool immune, int health, int damage);
     
     
     const int m_max_health;
@@ -84,8 +84,8 @@ class GameObject
     std::string m_objectName;
     const std::string m_sTexturePath;
     
-    Rect m_rRect; // very far sides of sprite
-    const Rect m_rcollisionRect; // collision detection rectangle of sprite
+    Rect<int> m_rRect; // very far sides of sprite
+    const Rect<int> m_rcollisionRect; // collision detection rectangle of sprite
     
     bool m_dead;
     

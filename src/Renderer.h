@@ -27,16 +27,16 @@ class Renderer
     void beginScene();
     void endScene();
     
-    void drawTexture(Rect rect, std::string texturePath, bool onMap = false , Rect clip = Rect(),
+    void drawTexture(Rect<int> rect, std::string texturePath, bool onMap = false , Rect<int> clip = Rect<int>(),
                      bool flipHorisontal = false, bool flipVertical= false, Point centerPoint = Point(), double angle = 0);
     
     SDL_Texture* loadTexture(std::string filename);
     SDL_Texture* loadTexture(std::string text, unsigned int color1, unsigned int color2, unsigned int color3);
     
-    void updateCamera(Rect screenCenter, int, int);
+    void updateCamera(Rect<int> screenCenter, int, int);
     Point getCameraAdjustment();
     
-    Rect getWindowSize();
+    Rect<int> getWindowSize();
     
     void DisableCursor(bool disable);
     

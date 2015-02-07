@@ -3,7 +3,6 @@
 //#include "../InputDefinition.h"
 //#include "../Input.h"
 
-#include "../EditorState.h"
 #include "../MenuState.h"
 
 #include <iostream>
@@ -28,7 +27,7 @@ void EditorEvent::Scroll(Point &camera_position){
 	// Add the diffrence to the next camerapos
 	camera_position.x -= m_camera_movement.x;
 	camera_position.y -= m_camera_movement.y;
-	std::cout << camera_position.x << " " << camera_position.y << '\n';
+
 	// Set the current mousepos for the next frame
 	ResetCameraMovement();
     }else{ // Set current mousepos if we want to scroll next frame
@@ -71,42 +70,28 @@ void EditorEvent::ReleaseObjectFromMouse( GameObject* &selected_object, EditorSt
     if( selected_object == nullptr )
 	return;
     
-    if( tool != EditorState::ADD ){
+    //if( tool != EditorState::ADD ){
 	selected_object = nullptr;
-    }
-    else{
-	if( selected_object->getType() != GameObject::PLAYER ){
-	    GameObject* keeper = selected_object->Clone();
-	    selected_object = nullptr;
-	    selected_object = keeper;
-	}
-	else{
-	    selected_object = nullptr;
-	}
-    }
+//    }
+//    else{
+//	if( selected_object->getType() != GameObject::PLAYER ){
+//	    GameObject* keeper = selected_object->Clone();
+//	    selected_object = nullptr;
+//	    selected_object = keeper;
+//	}
+//	else{
+//	    selected_object = nullptr;
+//	}
+//    }
 }
 
-GameObject* EditorEvent::GetObjectOnMouse( int &selected_layer, std::multimap<int, GameObject*>* level_list ){
-    GameObject* found{nullptr};
-    std::pair<int, GameObject*> selected = GetLevelObjectOnMouse(level_list);
-    if( selected.second != nullptr ){
-	if(selected.second->getType() == GameObject::ENEMY ){
-	    found = selected.second;
-	    selected_layer = selected.first;
-	}
-    }
-    return found;
-}
-
-std::pair<int, GameObject*> EditorEvent::GetLevelObjectOnMouse( std::multimap<int, GameObject*>* level_list ) {
+GameObject* EditorEvent::GetLevelObjectOnMouse( std::multimap<int, GameObject*>* level_list ) {
     // I'm using reverse_iterator because if items are stacked on each other I want the top layer object. Therefore I search outside and in...
-    std::pair<int, GameObject*> p( -1, nullptr );
+    GameObject* p = nullptr;
     std::multimap<int, GameObject*>::reverse_iterator rit;
     for(rit = level_list->rbegin() ; rit != level_list->rend() ; ++rit){
 	if( Input::getInstance()->is_mouse_inside( rit->second->getRect() ) ){
-	    p.first = rit->first;
-	    p.second = rit->second;
-	    return p;
+	    p = rit->second;
 	    break;
 	}
     }

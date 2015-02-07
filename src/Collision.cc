@@ -17,7 +17,7 @@ void Collision::CleanGrid(){
   m_mChecked.clear();
 }
 
-void Collision::AddToGrid( multimap<int, GameObject*> ObjectList, Point center, Rect screenSize, bool update_only_visable )
+void Collision::AddToGrid( multimap<int, GameObject*> ObjectList, Point center, Rect<int> screenSize, bool update_only_visable )
 {
   //std::cout << "Updating collision grid... " << std::endl;
   allocatedCells = 0;
@@ -141,8 +141,8 @@ int get_grid_col(int x_value)
 
 bool Collision::aabbIntersection(GameObject* objA, GameObject* objB)
 {
-  Rect a = objA->getCollisionRect();
-  Rect b = objB->getCollisionRect();
+  Rect<int> a = objA->getCollisionRect();
+  Rect<int> b = objB->getCollisionRect();
   
   int aBottom, aUpper, aLeft, aRight,
     bBottom, bUpper, bLeft, bRight;
@@ -168,7 +168,7 @@ bool Collision::aabbIntersection(GameObject* objA, GameObject* objB)
 void Collision::aabbWorldIntersection(GameObject* obj)
 {
     //If moving object is outside world, move back. --->>>> world height and world width need to be implemented!
-  Rect a = obj->getCollisionRect();
+  Rect<int> a = obj->getCollisionRect();
 
   if ( a.x < 0 )
     obj->setDead();

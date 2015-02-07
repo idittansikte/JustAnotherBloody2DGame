@@ -11,6 +11,11 @@ Input::Input():
     m_mouse_y(0),
     m_quit(0)
 {
+  ResetClicks();
+  for ( int i = 0; i < MOUSE_MAX; ++i )
+  {
+    this->m_mouse_pressed[i] = false;
+  }
   printf("Input instance created successful\n");
 }
 
@@ -25,8 +30,7 @@ Input* Input::getInstance()
   return instance;
 }
 
-void Input::update(int cameraX, int cameraY)
-{
+void Input::ResetClicks(){
   int i;
   for ( i = 0; i < KEYBOARD_SIZE; ++i )
   {
@@ -38,6 +42,10 @@ void Input::update(int cameraX, int cameraY)
     this->m_mouse_down[i] = false;
     this->m_mouse_up[i] = false;
   }
+}
+void Input::update(int cameraX, int cameraY)
+{
+  ResetClicks();
   
   SDL_Event event;
   while( SDL_PollEvent(&event) )
@@ -199,7 +207,6 @@ bool Input::is_mouse_pressed(MouseButton button)
     break;
     case MOUSE_WHEEL:
       if (m_mouse_pressed[MOUSE_WHEEL]){
-        std::cout <<  "true\n";
        return true;
       }
     break;
@@ -225,7 +232,7 @@ bool Input::get_quit()
   return this->m_quit;
 }
 
-bool Input::is_mouse_inside(Rect rectangle)
+bool Input::is_mouse_inside(Rect<int> rectangle)
 {
   if ( (this->m_mouse_x >= rectangle.x)
       && (this->m_mouse_x <= rectangle.x + rectangle.w)

@@ -39,7 +39,7 @@ class MovingGameObject : public GameObject
     void apply_velocity_y(float y);
     
   protected:
-    MovingGameObject( Rect r, Rect c, std::string texturePath, int uniqueID, bool immune, int health, int damage)
+    MovingGameObject( Rect<int> r, Rect<int> c, std::string texturePath, int uniqueID, bool immune, int health, int damage)
       : GameObject(r, c, texturePath, uniqueID, immune, health, damage), vx(0), vy(0), ax(1.0), ay(0.5)
     {}
     

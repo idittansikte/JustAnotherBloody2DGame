@@ -167,7 +167,7 @@ void Renderer::endScene()
 	SDL_Delay(1000/60);
 }
 
-void Renderer::drawTexture(Rect rect, std::string texturePath, bool onMap ,Rect clip, bool flipHorisontal, bool flipVertical, Point centerPoint, double angle)
+void Renderer::drawTexture(Rect<int> rect, std::string texturePath, bool onMap ,Rect<int> clip, bool flipHorisontal, bool flipVertical, Point centerPoint, double angle)
 {
 	
   SDL_Rect offset;
@@ -246,7 +246,7 @@ SDL_Texture* Renderer::loadTexture(string text, unsigned int color1, unsigned in
 }
 
 
-void Renderer::updateCamera(Rect screenCenter, int levelWidth, int levelHeight)
+void Renderer::updateCamera(Rect<int> screenCenter, int levelWidth, int levelHeight)
 {
 	//Center the camera over the player
 	camera.x = ( screenCenter.x + screenCenter.w / 2 ) - getWindowSize().w / 2;
@@ -270,12 +270,12 @@ Point Renderer::getCameraAdjustment()
 }
 
 
-Rect Renderer::getWindowSize(){
+Rect<int> Renderer::getWindowSize(){
     int w;
     int h;
     SDL_GetWindowSize(mWindow, &w, &h);
     
-    return Rect(0,0,w,h);
+    return Rect<int>(0,0,w,h);
 }
 
 void Renderer::DisableCursor(bool disable){

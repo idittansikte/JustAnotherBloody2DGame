@@ -6,8 +6,8 @@
 #include "../ProjectileManager.h"
 
 Enemy::Enemy(
-      Rect r,
-      Rect c,
+      Rect<int> r,
+      Rect<int> c,
       std::string texturePath,
       int uniqueID,
       bool immune,
@@ -17,7 +17,7 @@ Enemy::Enemy(
       ):
   MovingGameObject(r, c, texturePath, uniqueID, immune, health, damage), m_aggroDistance(aggroDistance)
 {
-    m_bar->setBarBox(Rect( 0, 0, 100, 4));
+    m_bar->setBarBox(Rect<int>( 0, 0, 100, 4));
       
     m_projectile = nullptr;
     m_intervall = 0;
@@ -117,7 +117,7 @@ void Enemy::MakeAttack(){
 	  if( m_projectile != nullptr ){
 	    
 	      Point targetpos = m_target->getCenterPos();
-	      Rect thisrect = this->getRect();
+	      Rect<int> thisrect = this->getRect();
   
 	      Projectile* clone = m_projectile->Clone();
 	      
@@ -145,7 +145,7 @@ void Enemy::MakeAttack(){
 
 void Enemy::Idle(){
   
-  Rect r = getRect();
+  Rect<int> r = getRect();
   Point startpos = GetStartPos();
   MakeMovement();
   
@@ -182,7 +182,7 @@ void Enemy::CombatAttackFocus(){
 
 void Enemy::MakeMovement(){
   
-  Rect r = getRect();
+  Rect<int> r = getRect();
   Point startpos = GetStartPos();
   
   if(GetDirection() == LEFT){

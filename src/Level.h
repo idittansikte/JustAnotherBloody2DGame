@@ -16,16 +16,14 @@
 class Level
 {
   public:
-  Level();
+  Level(std::string map_path);
   ~Level();
   
   void Init();
   
   std::multimap<int,GameObject*>* GetEditorList();
-  void AddObject(int layer, GameObject* object);
-  
+
   void Load(std::string levelname);
-  void SaveLevel();
   
   void Update();
   
@@ -36,15 +34,15 @@ class Level
   
   Player* getPlayer(){ return m_Player; }
   
-  void SetCamera(Rect campos);
-  Rect GetCameraPos(){ return m_camera_position; }
+  void SetCamera(Rect<int> campos);
+  Rect<int> GetCameraPos(){ return m_camera_position; }
   void UpdateCamera(Renderer* renderer);
   
   private:
     int m_iWorldWidth;
     int m_iWorldHeight;
     
-    Rect m_screenSize;
+    Rect<int> m_screenSize;
     
     LevelData m_LevelData;
     
@@ -62,7 +60,7 @@ class Level
     
     Player* m_Player;
     
-    Rect m_camera_position;
+    Rect<int> m_camera_position;
     
     int uniqueTag{};
      

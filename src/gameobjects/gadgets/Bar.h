@@ -13,7 +13,7 @@ class Bar{
 	Bar() = default;
 	~Bar() = default;
 	
-	void setBarBox(Rect barbox);
+	void setBarBox(Rect<int> barbox);
 	
 	void showBar(float uptime);
 	
@@ -23,7 +23,7 @@ class Bar{
     private:
 	float m_uptime{};
 	Timer m_timer;
-	Rect m_barBox;
+	Rect<int> m_barBox;
 };
 
 #endif

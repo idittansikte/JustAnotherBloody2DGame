@@ -3,7 +3,7 @@
 #include <iostream>
 #include <utility>
 
-GameObject::GameObject( Rect r, Rect c, std::string texturePath, int uniqueID, bool immune, int health, int damage):
+GameObject::GameObject( Rect<int> r, Rect<int> c, std::string texturePath, int uniqueID, bool immune, int health, int damage):
       m_rRect(r),
       m_rcollisionRect(c),
       m_sTexturePath(texturePath),
@@ -45,7 +45,7 @@ void GameObject::Reset(){
   }
 }
 
-bool GameObject::is_in_screen_range(Point screenCenter, Rect screenSize){
+bool GameObject::is_in_screen_range(Point screenCenter, Rect<int> screenSize){
       if ( this->getRect().x < screenCenter.x - screenSize.w || this->getRect().x > screenCenter.x + screenSize.w
         || this->getRect().y < screenCenter.y - screenSize.h || this->getRect().y < screenCenter.y + screenSize.h ){
           return false;
@@ -66,8 +66,8 @@ bool GameObject::isDead(){
   return m_dead;
 }
 
-Rect GameObject::getCollisionRect(){
-  return Rect(m_rRect.x + m_rcollisionRect.x, m_rRect.y + m_rcollisionRect.y,
+Rect<int> GameObject::getCollisionRect(){
+  return Rect<int>(m_rRect.x + m_rcollisionRect.x, m_rRect.y + m_rcollisionRect.y,
 	      m_rcollisionRect.w, m_rcollisionRect.h);
 }
 

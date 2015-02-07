@@ -16,7 +16,7 @@ class Sprite{
 	
 	std::string getFilename();
 	
-	void DrawSprite(Renderer* renderer, Rect boxToFill);
+	void DrawSprite(Renderer* renderer, Rect<int> boxToFill);
 	
 	
     private:
