@@ -1,6 +1,6 @@
 #include "PlayState.h"
 #include "PauseState.h"
-
+#include "MenuState.h"
 #include "InputDefinition.h"
 #include "Level.h"
 
@@ -40,12 +40,12 @@ void PlayState::HandleEvents(Game* game)
   if( Input::getInstance()->get_quit() )
       game->Quit();
       
-  if(Input::getInstance()->is_key_pressed(KEY_SPACE))
+  if(Input::getInstance()->is_key_down(KEY_SPACE))
       game->PushState(PauseState::Instance());
-      
+  
   if(Input::getInstance()->is_key_pressed(KEY_RIGHT) || Input::getInstance()->is_key_pressed(KEY_D))
       m_Level->getPlayer()->movement_right();
-      
+  
   if(Input::getInstance()->is_key_pressed(KEY_LEFT) || Input::getInstance()->is_key_pressed(KEY_A))
       m_Level->getPlayer()->movement_left();
   
@@ -62,9 +62,17 @@ void PlayState::HandleEvents(Game* game)
       m_Level->getPlayer()->movement_shoot();
 }
 void PlayState::Update(Game* game)
-{ 
+{
+  if(m_Level->getPlayer() == nullptr){
+    printf("There are no player in game...Returning to Menu\n");
+    game->ChangeState(MenuState::Instance());
+    return;
+  }
+
   if( !m_is_paused ){
+    printf("HERE!\n");
     if( m_Level->getPlayer()->isDead() ){
+      printf("HERE!\n");
       m_Level->Reset();
     }
     m_Level->Update();

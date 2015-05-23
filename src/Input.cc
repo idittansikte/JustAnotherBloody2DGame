@@ -32,11 +32,11 @@ Input* Input::getInstance()
 
 void Input::ResetClicks(){
   int i;
-  for ( i = 0; i < KEYBOARD_SIZE; ++i )
-  {
-    this->m_key_down[i] = false;
-    this->m_key_up[i] = false;
-  }
+  // for ( i = 0; i < KEYBOARD_SIZE; ++i )
+  // {
+  //   this->m_key_down[i] = false;
+  //   this->m_key_up[i] = false;
+  // }
   for ( i = 0; i < MOUSE_MAX; ++i )
   {
     this->m_mouse_down[i] = false;
@@ -65,9 +65,11 @@ void Input::update(int cameraX, int cameraY)
           this->keyboard = SDL_GetKeyboardState(nullptr);
           
           int index = event.key.keysym.scancode;
-          
-          this->m_key_down[index] = true;
-        }
+          if( this->m_key_up[index] && !this->m_key_down[index]){
+	    this->m_key_down[index] = true;
+	    this->m_key_up[index] = false;
+	  }
+	}
         break;
         
       case SDL_KEYUP:
@@ -76,8 +78,11 @@ void Input::update(int cameraX, int cameraY)
           
           int index = event.key.keysym.scancode;
           
-          this->m_key_down[index] = true;
-        }
+	  if( this->m_key_down[index] && !this->m_key_up[index] ){
+	    this->m_key_up[index] = true;
+	    this->m_key_down[index] = false;
+	  }
+	}
         break;
       
       case SDL_MOUSEMOTION:

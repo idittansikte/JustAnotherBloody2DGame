@@ -14,7 +14,7 @@ class Game;
 
 class EditorEvent{
     public:
-	
+	~EditorEvent() = default;
 	void Quit(Game*);
 	
 	void QuitEditor(Game*);

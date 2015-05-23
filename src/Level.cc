@@ -55,6 +55,8 @@ void Level::Init()
 {
     //Update Only needed once cuz static object wont move...
   m_StaticColliesGrid->AddToGrid(m_vStaticGameObjects, Point(), m_screenSize, false );
+  
+  printf("Level Init Successfull\n");
 }
 
 void Level::Load( std::string levelname ){
@@ -103,6 +105,11 @@ void Level::Load( std::string levelname ){
     ss.clear(); // Clear ss flags...
     
   } // END OF FILE
+  if(m_Player == nullptr){
+    printf("Error->Could not find any player in map.");
+    return;     
+  }
+  std::cout << "Successfully Loaded Level \"" << levelname << "\"\n";
 }
 
 std::multimap<int,GameObject*>* Level::GetEditorList(){
@@ -111,6 +118,7 @@ std::multimap<int,GameObject*>* Level::GetEditorList(){
 
 void Level::Update()
 {
+ printf("Level update\n");
    // Cleanup last frame grid for movingsobject to make a new one.
   m_MovingColliesGrid->CleanGrid();
   

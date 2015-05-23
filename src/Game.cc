@@ -60,7 +60,7 @@ void Game::PopState()
 
 
 void Game::HandleEvents()
-{
+{       
   // Lets move this to the current state instead
   m_vStates.back()->HandleEvents(this);
 }

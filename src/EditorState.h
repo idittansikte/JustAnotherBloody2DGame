@@ -83,8 +83,7 @@ class EditorState : public GameState
     Rect<int> m_rightmenubox;
     Rect<int> m_levelWindow;
     
-    std::vector<GameObject*> m_lastAddedObjects;
-    
+    int m_tag{};
     
     const int m_gridSize{10};
     
